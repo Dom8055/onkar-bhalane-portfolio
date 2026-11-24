@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.admin import router as admin_router
@@ -22,7 +23,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("portfolio.app")
 
-_init_lock = asyncio.Lock()
 _initialized = False
 
 
@@ -30,20 +30,20 @@ async def ensure_initialized() -> None:
     global _initialized
     if _initialized and db_manager.db is not None:
         return
-    async with _init_lock:
-        if _initialized and db_manager.db is not None:
-            return
-        await db_manager.connect()
-        db = get_database()
-        await ensure_indexes(db)
-        await seed_database(db)
-        _initialized = True
-        logger.info("Portfolio API ready (mock_db=%s)", db_manager.using_mock)
+    await db_manager.connect()
+    db = get_database()
+    await ensure_indexes(db)
+    await seed_database(db)
+    _initialized = True
+    logger.info("Portfolio API ready (mock_db=%s)", db_manager.using_mock)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await ensure_initialized()
+    try:
+        await ensure_initialized()
+    except Exception as exc:
+        logger.error("Startup DB initialization failed: %s", exc)
     yield
     await db_manager.disconnect()
 
@@ -62,7 +62,19 @@ def create_app() -> FastAPI:
 
     @app.middleware("http")
     async def ensure_db_middleware(request: Request, call_next):
-        await ensure_initialized()
+        if request.url.path == "/api/health":
+            return await call_next(request)
+        try:
+            await ensure_initialized()
+        except Exception as exc:
+            logger.exception("Database initialization error")
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Database connection unavailable",
+                    "error": f"{type(exc).__name__}: {exc}",
+                },
+            )
         return await call_next(request)
 
     app.add_middleware(
@@ -78,15 +90,30 @@ def create_app() -> FastAPI:
     app.include_router(admin_router, prefix=settings.API_PREFIX)
 
     # Serve uploaded images and documents
-    app.mount("/uploads", StaticFiles(directory=str(settings.upload_path)), name="uploads")
+    try:
+        app.mount("/uploads", StaticFiles(directory=str(settings.upload_path)), name="uploads")
+    except Exception as exc:
+        logger.warning("Skipping /uploads static mount: %s", exc)
 
     @app.get("/api/health", tags=["Health"])
     async def health_check():
-        return {
-            "status": "healthy",
-            "database": "mongomock" if db_manager.using_mock else "mongodb",
-            "environment": settings.ENVIRONMENT,
-        }
+        try:
+            await ensure_initialized()
+            return {
+                "status": "healthy",
+                "database": "mongomock" if db_manager.using_mock else "mongodb",
+                "environment": settings.ENVIRONMENT,
+            }
+        except Exception as exc:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "unhealthy",
+                    "database": "disconnected",
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "environment": settings.ENVIRONMENT,
+                },
+            )
 
     return app
 

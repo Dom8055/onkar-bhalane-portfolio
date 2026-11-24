@@ -14,27 +14,35 @@ class DatabaseManager:
     client: Optional[Any] = None
     db: Optional[Any] = None
     using_mock: bool = False
+    last_error: Optional[str] = None
 
     async def connect(self) -> None:
         settings = get_settings()
         try:
-            client = AsyncIOMotorClient(
-                settings.MONGODB_URI,
-                serverSelectionTimeoutMS=2500,
-                connectTimeoutMS=2500,
-            )
+            kwargs: dict = {
+                "serverSelectionTimeoutMS": 10000,
+                "connectTimeoutMS": 10000,
+            }
+            if settings.MONGODB_URI.startswith("mongodb+srv://") or "tls=true" in settings.MONGODB_URI.lower():
+                import certifi
+
+                kwargs["tlsCAFile"] = certifi.where()
+
+            client = AsyncIOMotorClient(settings.MONGODB_URI, **kwargs)
             await client.admin.command("ping")
             self.client = client
             self.db = client[settings.MONGODB_DB_NAME]
             self.using_mock = False
-            logger.info("Connected to MongoDB at %s (db=%s)", settings.MONGODB_URI, settings.MONGODB_DB_NAME)
+            self.last_error = None
+            logger.info("Connected to MongoDB (db=%s)", settings.MONGODB_DB_NAME)
         except Exception as exc:
+            self.last_error = f"{type(exc).__name__}: {exc}"
             if not settings.MONGODB_FALLBACK_MOCK:
-                logger.error("Failed to connect to MongoDB: %s", exc)
+                logger.error("Failed to connect to MongoDB: %s", self.last_error)
                 raise
             logger.warning(
                 "MongoDB unreachable (%s). Falling back to mongomock-motor for local dev/testing.",
-                exc,
+                self.last_error,
             )
             from mongomock_motor import AsyncMongoMockClient
 
