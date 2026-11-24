@@ -82,6 +82,9 @@ class Settings(BaseSettings):
 
     @property
     def bundled_resume_dir(self) -> Path:
+        assets_dir = (BASE_DIR / "assets").resolve()
+        if assets_dir.exists():
+            return assets_dir
         return (BASE_DIR.parent / "uploads" / "resume").resolve()
 
 
