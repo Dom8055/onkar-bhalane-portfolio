@@ -191,10 +191,13 @@ async def track_event(payload: AnalyticsEventCreate, request: Request) -> Dict[s
 
 @router.get("/resume")
 async def download_resume():
-    """Serve the latest uploaded resume PDF (or the seeded resume PDF)."""
+    """Serve the latest uploaded resume PDF (or the seeded bundled resume PDF)."""
     settings = get_settings()
-    resume_dir = settings.upload_path / "resume"
-    pdf_files = sorted(resume_dir.glob("*.pdf"), key=lambda p: p.stat().st_mtime, reverse=True)
+    candidates = []
+    for folder in (settings.upload_path / "resume", settings.bundled_resume_dir):
+        if folder.exists():
+            candidates.extend(folder.glob("*.pdf"))
+    pdf_files = sorted(candidates, key=lambda p: p.stat().st_mtime, reverse=True)
     if not pdf_files:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

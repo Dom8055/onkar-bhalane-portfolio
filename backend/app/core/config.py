@@ -67,13 +67,22 @@ class Settings(BaseSettings):
 
     @property
     def upload_path(self) -> Path:
-        p = Path(self.UPLOAD_DIR)
-        if not p.is_absolute():
-            p = (BASE_DIR / p).resolve()
+        import os
+
+        if os.environ.get("VERCEL"):
+            p = Path("/tmp/uploads")
+        else:
+            p = Path(self.UPLOAD_DIR)
+            if not p.is_absolute():
+                p = (BASE_DIR / p).resolve()
         p.mkdir(parents=True, exist_ok=True)
         (p / "images").mkdir(parents=True, exist_ok=True)
         (p / "resume").mkdir(parents=True, exist_ok=True)
         return p
+
+    @property
+    def bundled_resume_dir(self) -> Path:
+        return (BASE_DIR.parent / "uploads" / "resume").resolve()
 
 
 @lru_cache()

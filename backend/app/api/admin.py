@@ -625,10 +625,29 @@ async def admin_upload_media(
     sub_folder = "resume" if is_resume else "images"
     safe_stem = slugify(Path(orig_name).stem) or "asset"
     unique_name = f"{safe_stem}-{uuid.uuid4().hex[:8]}{ext}"
-    target_path = settings.upload_path / sub_folder / unique_name
-    target_path.write_bytes(content)
 
-    public_url = f"/uploads/{sub_folder}/{unique_name}"
+    if settings.CLOUDINARY_CLOUD_NAME and settings.CLOUDINARY_API_KEY and settings.CLOUDINARY_API_SECRET:
+        import cloudinary
+        import cloudinary.uploader
+
+        cloudinary.config(
+            cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+            api_key=settings.CLOUDINARY_API_KEY,
+            api_secret=settings.CLOUDINARY_API_SECRET,
+            secure=True,
+        )
+        res_type = "raw" if ext == ".pdf" else "image"
+        uploaded = cloudinary.uploader.upload(
+            content,
+            folder=f"onkar_portfolio/{sub_folder}",
+            public_id=safe_stem,
+            resource_type=res_type,
+        )
+        public_url = uploaded["secure_url"]
+    else:
+        target_path = settings.upload_path / sub_folder / unique_name
+        target_path.write_bytes(content)
+        public_url = f"/uploads/{sub_folder}/{unique_name}"
     db = get_database()
     now = datetime.now(timezone.utc)
     media_doc = {

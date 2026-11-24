@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -21,14 +22,28 @@ logging.basicConfig(
 )
 logger = logging.getLogger("portfolio.app")
 
+_init_lock = asyncio.Lock()
+_initialized = False
+
+
+async def ensure_initialized() -> None:
+    global _initialized
+    if _initialized and db_manager.db is not None:
+        return
+    async with _init_lock:
+        if _initialized and db_manager.db is not None:
+            return
+        await db_manager.connect()
+        db = get_database()
+        await ensure_indexes(db)
+        await seed_database(db)
+        _initialized = True
+        logger.info("Portfolio API ready (mock_db=%s)", db_manager.using_mock)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await db_manager.connect()
-    db = get_database()
-    await ensure_indexes(db)
-    await seed_database(db)
-    logger.info("Portfolio API ready (mock_db=%s)", db_manager.using_mock)
+    await ensure_initialized()
     yield
     await db_manager.disconnect()
 
@@ -44,6 +59,11 @@ def create_app() -> FastAPI:
         openapi_url="/api/openapi.json",
         lifespan=lifespan,
     )
+
+    @app.middleware("http")
+    async def ensure_db_middleware(request: Request, call_next):
+        await ensure_initialized()
+        return await call_next(request)
 
     app.add_middleware(
         CORSMiddleware,
