@@ -1,0 +1,11 @@
+{
+  "name": "onkar-portfolio",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "sh -c 'cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000 & cd frontend && npm run dev'",
+    "build": "cd frontend && npm run build",
+    "test": "backend/.venv/bin/pytest backend/tests/test_api.py -v"
+  }
+}
