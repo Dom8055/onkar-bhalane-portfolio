@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Briefcase, Calendar, ChevronDown, MapPin } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 import type { Experience } from '../types/portfolio';
 
 export const ExperienceSection: React.FC<{ experiences: Experience[] }> = ({ experiences }) => {
+  const { theme } = useTheme();
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
     experiences.forEach((e, idx) => {
-      init[e.id] = idx < 2; // Expand latest 2 by default
+      init[e.id] = idx < 2;
     });
     return init;
   });
@@ -15,94 +17,89 @@ export const ExperienceSection: React.FC<{ experiences: Experience[] }> = ({ exp
   const toggle = (id: string) => setExpandedIds((prev) => ({ ...prev, [id]: !prev[id] }));
 
   return (
-    <section id="experience" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <div className="max-w-2xl">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-gold-light">03 · Career Timeline</p>
-          <h2 className="mt-3 font-display text-3xl font-bold text-ivory sm:text-5xl">
-            Professional <span className="text-gradient-gold">Experience</span>
-          </h2>
-          <p className="mt-4 text-sm text-slateMuted sm:text-base">
-            Four years of progressive mobile engineering ownership — shipping production Flutter apps across diverse teams and domains.
+    <section id="experience" className="relative overflow-hidden border-b border-hairline bg-obsidian py-24 sm:py-32">
+      {/* Subtle Architectural Monolith Texture in Dark Mode */}
+      {theme === 'dark' && (
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.09]">
+          <img src="/assets/backgrounds/arch_monolith.jpg" alt="" aria-hidden="true" className="h-full w-full object-cover" />
+        </div>
+      )}
+
+      <div className="relative z-10 mx-auto max-w-[1380px] px-5 sm:px-10">
+        <div className="flex flex-col justify-between gap-6 border-b border-hairline pb-8 lg:flex-row lg:items-end">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">03 / Career Ledger</p>
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ivory sm:text-5xl">
+              Professional <span className="text-gradient-gold">Experience</span>
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-slateMuted">
+            Four years of end-to-end Flutter product engineering across agencies and enterprise teams in Nagpur, India.
           </p>
         </div>
 
-        {/* Vertical Timeline */}
-        <div className="relative mt-14 space-y-6 before:absolute before:bottom-4 before:left-4 before:top-4 before:w-px before:bg-gradient-to-b before:from-gold before:via-gold/30 before:to-transparent sm:before:left-6">
+        {/* Editorial Timeline Rows */}
+        <div className="mt-8 divide-y divide-hairline border-b border-hairline">
           {experiences.map((exp, idx) => {
             const isOpen = expandedIds[exp.id] ?? true;
             return (
               <motion.div
                 key={exp.id}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="relative pl-12 sm:pl-16"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.45, delay: idx * 0.06 }}
+                className="py-7"
               >
-                {/* Timeline Dot */}
-                <div
-                  className={`absolute left-2 top-6 flex h-5 w-5 items-center justify-center rounded-full border-2 sm:left-4 ${
-                    exp.is_current
-                      ? 'border-gold-light bg-gold shadow-goldGlow'
-                      : 'border-gold/60 bg-obsidian'
-                  }`}
+                <button
+                  type="button"
+                  onClick={() => toggle(exp.id)}
+                  aria-expanded={isOpen}
+                  className="grid w-full items-start gap-4 text-left lg:grid-cols-12"
                 >
-                  {exp.is_current && <span className="h-2 w-2 rounded-full bg-obsidian" />}
-                </div>
-
-                <div className="glass-panel overflow-hidden rounded-2xl transition-colors hover:border-gold/30">
-                  <button
-                    onClick={() => toggle(exp.id)}
-                    className="flex w-full items-start justify-between gap-4 p-6 text-left"
-                    aria-expanded={isOpen}
-                  >
+                  <div className="flex items-center gap-3 lg:col-span-3">
+                    <span className="font-mono text-xs text-gold">{String(idx + 1).padStart(2, '0')}</span>
                     <div>
-                      <div className="flex flex-wrap items-center gap-2.5">
-                        <h3 className="font-display text-xl font-bold text-ivory">{exp.role}</h3>
-                        {exp.is_current && (
-                          <span className="rounded-full bg-gold/20 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-light">
-                            Current
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-1 flex items-center gap-2 text-sm font-medium text-gold-light">
-                        <Briefcase className="h-4 w-4" />
-                        {exp.company}
-                      </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-4 text-xs text-slateMuted">
-                        <span className="inline-flex items-center gap-1.5">
-                          <Calendar className="h-3.5 w-3.5 text-gold/80" />
-                          {exp.duration}
-                        </span>
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5 text-gold/80" />
-                          {exp.location}
-                        </span>
-                      </div>
+                      <p className="font-mono text-xs uppercase tracking-[0.14em] text-ivory">{exp.duration}</p>
+                      <p className="mt-0.5 text-xs text-slateMuted">{exp.location}</p>
                     </div>
+                  </div>
 
-                    <ChevronDown
-                      className={`mt-1 h-5 w-5 shrink-0 text-slateMuted transition-transform duration-300 ${
-                        isOpen ? 'rotate-180 text-gold-light' : ''
-                      }`}
-                    />
-                  </button>
+                  <div className="lg:col-span-8">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="font-display text-xl font-bold text-ivory sm:text-2xl">{exp.company}</h3>
+                      {exp.is_current && (
+                        <span className="border border-gold/50 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
+                          Current
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 font-heading text-sm font-medium text-gold">{exp.role}</p>
+                  </div>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden border-t border-white/[0.06]"
-                      >
-                        <div className="p-6 pt-5">
+                  <div className="flex justify-end lg:col-span-1">
+                    <span className="flex h-8 w-8 items-center justify-center border border-hairline bg-surface text-slateMuted">
+                      {isOpen ? <Minus className="h-4 w-4 text-gold" /> : <Plus className="h-4 w-4" />}
+                    </span>
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-6 grid lg:grid-cols-12">
+                        <div className="lg:col-span-3" />
+                        <div className="lg:col-span-9">
                           <ul className="space-y-2.5 text-sm leading-relaxed text-slateMuted">
                             {exp.responsibilities.map((item, rIdx) => (
                               <li key={rIdx} className="flex items-start gap-3">
-                                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-light" />
+                                <span className="mt-2 h-1 w-3 shrink-0 bg-gold" />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -113,7 +110,7 @@ export const ExperienceSection: React.FC<{ experiences: Experience[] }> = ({ exp
                               {exp.technologies.map((tech) => (
                                 <span
                                   key={tech}
-                                  className="rounded-lg border border-white/10 bg-obsidian/70 px-2.5 py-1 font-mono text-[11px] text-ivory/80"
+                                  className="border border-hairline bg-surface px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ivory"
                                 >
                                   {tech}
                                 </span>
@@ -121,10 +118,10 @@ export const ExperienceSection: React.FC<{ experiences: Experience[] }> = ({ exp
                             </div>
                           )}
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             );
           })}

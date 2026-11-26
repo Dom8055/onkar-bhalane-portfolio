@@ -1,46 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award } from 'lucide-react';
 import type { Achievement } from '../types/portfolio';
 
 export const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achievements }) => {
   return (
-    <section id="achievements" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.25em] text-gold-light">
-            <Award className="h-4 w-4" />
-            05 · Highlights
-          </div>
-          <h2 className="mt-3 font-display text-3xl font-bold text-ivory sm:text-5xl">
+    <section id="achievements" className="relative border-b border-hairline bg-obsidian py-24 sm:py-32">
+      <div className="mx-auto max-w-[1380px] px-5 sm:px-10">
+        <div className="border-b border-hairline pb-8">
+          <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">05 / Milestones</p>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ivory sm:text-5xl">
             Key <span className="text-gradient-gold">Achievements</span>
           </h2>
-          <p className="mt-4 text-sm text-slateMuted sm:text-base">
-            Milestones from owning production Flutter architectures across payments, KYC, real-time communication, and multi-stack collaboration.
-          </p>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 divide-y divide-hairline border-b border-hairline">
           {achievements.map((item, idx) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.45, delay: idx * 0.07 }}
-              className={`glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all hover:border-gold/40 ${
-                idx === 0 ? 'md:col-span-2 lg:col-span-2' : ''
-              }`}
+              transition={{ duration: 0.4, delay: idx * 0.05 }}
+              className="group grid items-baseline gap-4 py-7 transition-colors hover:bg-surface/40 sm:px-4 lg:grid-cols-12"
             >
-              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold/10 blur-2xl transition-opacity group-hover:bg-gold/20" />
-              <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gold/40 bg-obsidian font-display text-lg font-bold tracking-wider text-gold-light shadow-goldGlow">
+              <div className="lg:col-span-2">
+                <span className="font-display text-3xl font-bold tracking-tight text-gold sm:text-4xl">
                   {item.badge}
-                </div>
-                <div>
-                  <h3 className="font-display text-lg font-bold text-ivory">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slateMuted">{item.description}</p>
-                </div>
+                </span>
+              </div>
+              <div className="lg:col-span-4">
+                <h3 className="font-display text-lg font-semibold text-ivory">{item.title}</h3>
+              </div>
+              <div className="lg:col-span-6">
+                <p className="text-sm leading-relaxed text-slateMuted">{item.description}</p>
               </div>
             </motion.div>
           ))}

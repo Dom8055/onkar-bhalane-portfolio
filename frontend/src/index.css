@@ -2,83 +2,120 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+:root.dark {
+  --bg-primary: #080B12;
+  --bg-secondary: #101522;
+  --bg-surface: #151C2B;
+  --bg-surface-hover: #1C2538;
+  --text-primary: #F5F5F5;
+  --text-secondary: #A3AAB8;
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
   --color-accent: #B68B50;
-  --color-accent-light: #D8B779;
-  --color-bg-primary: #080B12;
-  --color-bg-secondary: #101522;
-  --color-surface: #151C2B;
+  --color-accent-soft: #D8B779;
+  --color-accent-muted: rgba(182, 139, 80, 0.15);
+  --shadow-accent: 0 18px 50px -18px rgba(182, 139, 80, 0.35);
+  --shadow-elevated: 0 24px 64px -28px rgba(0, 0, 0, 0.78);
+  --glass-bg: rgba(16, 21, 34, 0.72);
+  --grain-opacity: 0.035;
+}
+
+:root.light {
+  --bg-primary: #F5F3EE;
+  --bg-secondary: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #ECEAE3;
+  --text-primary: #17191F;
+  --text-secondary: #5B606E;
+  --border-subtle: rgba(23, 25, 31, 0.11);
+  --border-strong: rgba(23, 25, 31, 0.22);
+  --color-accent: #A77B43;
+  --color-accent-soft: #8A612E;
+  --color-accent-muted: rgba(167, 123, 67, 0.12);
+  --shadow-accent: 0 16px 40px -18px rgba(167, 123, 67, 0.28);
+  --shadow-elevated: 0 24px 56px -28px rgba(23, 25, 31, 0.14);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --grain-opacity: 0.025;
 }
 
 @layer base {
   html {
-    background-color: #080B12;
-    color: #F5F5F5;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     font-family: 'Inter', 'Manrope', system-ui, sans-serif;
     overflow-x: hidden;
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
 
   body {
-    background-color: #080B12;
-    color: #F5F5F5;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4 {
     font-family: 'Space Grotesk', 'Sora', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 }
 
-/* Editorial glassmorphism & luxury surfaces */
+/* Architectural editorial surfaces (replaces heavy glassmorphism templates) */
 .glass-panel {
-  background: linear-gradient(145deg, rgba(21, 28, 43, 0.78), rgba(16, 21, 34, 0.62));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .glass-panel-gold {
-  background: linear-gradient(145deg, rgba(21, 28, 43, 0.85), rgba(16, 21, 34, 0.72));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(182, 139, 80, 0.28);
+  background-color: var(--bg-surface);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 34%, transparent);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.editorial-rule {
+  border-color: var(--border-subtle);
 }
 
 .text-gradient-gold {
-  background: linear-gradient(135deg, #F5F5F5 0%, #D8B779 52%, #B68B50 100%);
+  background: linear-gradient(125deg, var(--color-accent-soft) 0%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .bg-ambient-grid {
-  background-size: 64px 64px;
+  background-size: 72px 72px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+}
+
+/* Subtle architectural film grain */
+.film-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: var(--grain-opacity);
+  background-image: radial-gradient(currentColor 0.75px, transparent 0.75px);
+  background-size: 18px 18px;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #080B12;
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(182, 139, 80, 0.35);
+  background: color-mix(in srgb, var(--color-accent) 45%, transparent);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(216, 183, 121, 0.6);
-}
-
-/* Noise grain overlay */
-.noise-overlay {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
-  background-size: 24px 24px;
+  background: var(--color-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {

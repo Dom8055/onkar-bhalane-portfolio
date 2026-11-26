@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  ExternalLink,
-  Github,
-  Globe,
-  Smartphone,
-  Star,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, ExternalLink, Github, Globe, Smartphone } from 'lucide-react';
+import { CustomCursor } from '../components/CustomCursor';
 import { Navbar } from '../components/Navbar';
 import { ProjectGallery } from '../components/ProjectGallery';
 import { SEOHead } from '../components/SEOHead';
@@ -41,8 +33,8 @@ export const ProjectDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-obsidian text-slateMuted">
-        Loading case study...
+      <div className="flex min-h-screen items-center justify-center bg-obsidian font-mono text-xs uppercase tracking-[0.2em] text-slateMuted">
+        Loading Case Study...
       </div>
     );
   }
@@ -51,7 +43,7 @@ export const ProjectDetailPage: React.FC = () => {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-obsidian px-6 text-center">
         <h1 className="font-display text-3xl font-bold text-ivory">Project Not Found</h1>
-        <Link to="/" className="mt-6 rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-obsidian">
+        <Link to="/" className="mt-6 bg-gold px-6 py-3 font-mono text-xs font-semibold uppercase tracking-widest text-[#080B12]">
           Back to Portfolio
         </Link>
       </div>
@@ -62,51 +54,55 @@ export const ProjectDetailPage: React.FC = () => {
   const currentIdx = allProjects.findIndex((p) => p.slug === project.slug);
   const prevProject = currentIdx > 0 ? allProjects[currentIdx - 1] : null;
   const nextProject = currentIdx >= 0 && currentIdx < allProjects.length - 1 ? allProjects[currentIdx + 1] : null;
-  const isBlueTheme = project.slug === 'insta-wash-clean' || project.accent_color?.toLowerCase() === '#2563eb';
+
+  const accent =
+    project.slug === 'insta-wash-clean'
+      ? '#2563EB'
+      : project.slug === 'purti-delivery-partner'
+      ? '#10B981'
+      : project.accent_color || '#B68B50';
 
   return (
     <div className="min-h-screen bg-obsidian text-ivory">
+      <div className="film-grain" />
       <SEOHead
         profile={data?.profile}
         settings={data?.settings}
         pageTitle={`${project.title} — Case Study | Onkar Bhalane`}
         pageDescription={project.short_description}
       />
+      <CustomCursor enabled={data?.settings?.custom_cursor_enabled !== false} />
       <Navbar profile={data?.profile} settings={data?.settings} />
 
-      <main className="mx-auto max-w-5xl px-5 pb-24 pt-28 sm:px-8 sm:pt-36">
+      <main className="mx-auto max-w-[1240px] px-5 pb-24 pt-28 sm:px-10 sm:pt-36">
         <Link
           to="/#projects"
-          className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-slateMuted transition-colors hover:text-gold-light"
+          className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-slateMuted transition-colors hover:text-gold"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to All Projects
+          <ArrowLeft className="h-3.5 w-3.5" />
+          All Projects
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8">
+        {/* Editorial Case Study Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8 border-b border-hairline pb-10"
+        >
           <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`rounded-full border px-3 py-1 font-mono text-xs uppercase tracking-widest ${
-                isBlueTheme
-                  ? 'border-sky-400/40 bg-blue-500/15 text-sky-300'
-                  : 'border-gold/30 bg-gold/10 text-gold-light'
-              }`}
-            >
+            <span className="font-mono text-xs font-semibold" style={{ color: accent }}>
+              {String(project.order).padStart(2, '0')}
+            </span>
+            <span className="h-px w-8 bg-hairline" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: accent }}>
               {project.industry_badge || project.category}
             </span>
-            {project.is_featured && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-surface px-3 py-1 text-xs text-gold-light">
-                <Star className="h-3 w-3 fill-gold-light" />
-                Featured Case Study
-              </span>
-            )}
           </div>
 
-          <h1 className="mt-4 font-display text-4xl font-bold text-ivory sm:text-5xl">{project.title}</h1>
-          {project.subtitle && <p className="mt-2 text-lg text-gold-light">{project.subtitle}</p>}
-          <p className="mt-5 text-base leading-relaxed text-slateMuted sm:text-lg">
-            {project.full_description || project.short_description}
-          </p>
+          <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-ivory sm:text-6xl">
+            {project.title}
+          </h1>
+          {project.subtitle && <p className="mt-2 font-heading text-lg text-slateMuted">{project.subtitle}</p>}
 
           {/* Store & External Links */}
           <div className="mt-7 flex flex-wrap gap-3">
@@ -115,7 +111,7 @@ export const ProjectDetailPage: React.FC = () => {
                 href={project.google_play_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-5 py-2.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/35 transition-colors hover:bg-emerald-500/25"
+                className="inline-flex items-center gap-2 border border-emerald-500/40 bg-emerald-500/10 px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-emerald-600 transition-colors hover:bg-emerald-500/20 dark:text-emerald-300"
               >
                 <Smartphone className="h-4 w-4" />
                 Google Play Store
@@ -127,7 +123,7 @@ export const ProjectDetailPage: React.FC = () => {
                 href={project.app_store_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-sky-500/15 px-5 py-2.5 text-sm font-medium text-sky-300 ring-1 ring-sky-500/35 transition-colors hover:bg-sky-500/25"
+                className="inline-flex items-center gap-2 border border-sky-500/40 bg-sky-500/10 px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-sky-600 transition-colors hover:bg-sky-500/20 dark:text-sky-300"
               >
                 <Smartphone className="h-4 w-4" />
                 Apple App Store
@@ -139,7 +135,7 @@ export const ProjectDetailPage: React.FC = () => {
                 href={project.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-surface px-5 py-2.5 text-sm font-medium text-ivory hover:border-gold/50"
+                className="inline-flex items-center gap-2 border border-hairline bg-surface px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-ivory hover:border-gold"
               >
                 <Github className="h-4 w-4" />
                 GitHub
@@ -150,7 +146,7 @@ export const ProjectDetailPage: React.FC = () => {
                 href={project.live_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-5 py-2.5 text-sm font-medium text-gold-light hover:bg-gold/20"
+                className="inline-flex items-center gap-2 border border-gold/50 bg-gold/10 px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-gold hover:bg-gold/20"
               >
                 <Globe className="h-4 w-4" />
                 Live Demo
@@ -162,9 +158,9 @@ export const ProjectDetailPage: React.FC = () => {
                 href={lnk.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-surface px-5 py-2.5 text-sm font-medium text-ivory hover:border-gold/50"
+                className="inline-flex items-center gap-2 border border-hairline bg-surface px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-ivory hover:border-gold"
               >
-                <Smartphone className="h-4 w-4 text-gold-light" />
+                <Smartphone className="h-4 w-4 text-gold" />
                 {lnk.label}
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
@@ -172,51 +168,74 @@ export const ProjectDetailPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Interactive Project Visual Gallery */}
+        {/* Interactive Project Gallery */}
         <div className="mt-10">
           <ProjectGallery project={project} />
         </div>
 
-        {/* Contributions & Technology Stack */}
-        <div className="mt-12 grid gap-8 md:grid-cols-12">
-          <div className="glass-panel rounded-2xl p-7 md:col-span-7">
-            <h2 className="font-display text-xl font-bold text-ivory">Key Contributions & Architecture</h2>
-            <ul className="mt-5 space-y-3.5">
-              {project.contribution.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-sm leading-relaxed text-slateMuted">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold-light" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Two-Column Editorial Case Study Content */}
+        <div className="mt-14 grid gap-12 lg:grid-cols-12">
+          <div className="space-y-10 lg:col-span-8">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: accent }}>
+                Overview
+              </p>
+              <p className="mt-4 text-base leading-[1.85] text-slateMuted sm:text-lg">
+                {project.full_description || project.short_description}
+              </p>
+            </div>
 
-          <div className="glass-panel rounded-2xl p-7 md:col-span-5">
-            <h2 className="font-display text-xl font-bold text-ivory">Technology Stack</h2>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {project.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-lg border border-gold/25 bg-obsidian/80 px-3 py-1.5 font-mono text-xs text-gold-light"
-                >
-                  {tech}
-                </span>
-              ))}
+            <div className="border-t border-hairline pt-8">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: accent }}>
+                Responsibilities & Engineering Contributions
+              </p>
+              <ul className="mt-5 divide-y divide-hairline border-y border-hairline">
+                {project.contribution.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-4 py-4 text-sm leading-relaxed text-ivory">
+                    <span className="font-mono text-xs" style={{ color: accent }}>
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
+
+          {/* Sticky Metadata Rail */}
+          <aside className="lg:sticky lg:top-28 lg:col-span-4 lg:self-start">
+            <div className="border border-hairline bg-surface p-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slateMuted">Technology Stack</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {project.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="border border-hairline bg-obsidian px-3 py-1.5 font-mono text-[11px] text-ivory"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 border-t border-hairline pt-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slateMuted">Category</p>
+                <p className="mt-1 font-display text-base font-semibold text-ivory">{project.category}</p>
+              </div>
+            </div>
+          </aside>
         </div>
 
-        {/* Prev / Next Navigation */}
-        <div className="mt-14 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2">
+        {/* Prev / Next Editorial Footer Navigation */}
+        <div className="mt-16 grid gap-4 border-t border-hairline pt-8 sm:grid-cols-2">
           {prevProject ? (
             <Link
               to={`/projects/${prevProject.slug}`}
-              className="glass-panel group flex items-center gap-4 rounded-2xl p-5 transition-colors hover:border-gold/40"
+              className="group flex items-center gap-4 border border-hairline bg-surface p-6 transition-colors hover:border-gold"
             >
-              <ArrowLeft className="h-5 w-5 text-gold-light transition-transform group-hover:-translate-x-1" />
+              <ArrowLeft className="h-5 w-5 text-gold transition-transform group-hover:-translate-x-1" />
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slateMuted">Previous Project</p>
-                <p className="mt-1 font-display text-base font-semibold text-ivory">{prevProject.title}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Previous Project</p>
+                <p className="mt-1 font-display text-lg font-semibold text-ivory">{prevProject.title}</p>
               </div>
             </Link>
           ) : (
@@ -226,13 +245,13 @@ export const ProjectDetailPage: React.FC = () => {
           {nextProject && (
             <Link
               to={`/projects/${nextProject.slug}`}
-              className="glass-panel group flex items-center justify-end gap-4 rounded-2xl p-5 text-right transition-colors hover:border-gold/40"
+              className="group flex items-center justify-end gap-4 border border-hairline bg-surface p-6 text-right transition-colors hover:border-gold"
             >
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slateMuted">Next Project</p>
-                <p className="mt-1 font-display text-base font-semibold text-ivory">{nextProject.title}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Next Project</p>
+                <p className="mt-1 font-display text-lg font-semibold text-ivory">{nextProject.title}</p>
               </div>
-              <ArrowRight className="h-5 w-5 text-gold-light transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="h-5 w-5 text-gold transition-transform group-hover:translate-x-1" />
             </Link>
           )}
         </div>

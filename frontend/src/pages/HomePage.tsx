@@ -130,7 +130,8 @@ export const HomePage: React.FC = () => {
       : ['hero', 'about', 'skills', 'experience', 'projects', 'achievements', 'education', 'contact'];
 
   return (
-    <div className="min-h-screen bg-obsidian text-ivory">
+    <div className="min-h-screen bg-obsidian text-ivory transition-colors duration-300">
+      <div className="film-grain" />
       <SEOHead profile={data.profile} settings={data.settings} />
       {!loaderDone && <CinematicLoader onComplete={handleLoaderComplete} logoText={data.settings?.logo_text} />}
       <CustomCursor enabled={data.settings?.custom_cursor_enabled !== false} />

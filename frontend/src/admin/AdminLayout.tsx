@@ -13,11 +13,14 @@ import {
   LogOut,
   Mail,
   Menu,
+  Moon,
   Settings,
+  Sun,
   User,
   X,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../hooks/useTheme';
 
 const SIDEBAR_LINKS = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -35,6 +38,7 @@ const SIDEBAR_LINKS = [
 
 export const AdminLayout: React.FC = () => {
   const { admin, loading, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -67,23 +71,33 @@ export const AdminLayout: React.FC = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/[0.08] bg-midnight transition-transform duration-300 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-hairline bg-midnight transition-transform duration-300 lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
           <Link to="/admin" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-gold/40 bg-obsidian font-display text-sm font-bold text-gold-light">
+            <div className="flex h-9 w-9 items-center justify-center border border-gold/60 bg-obsidian font-display text-xs font-bold tracking-[0.2em] text-gold">
               OB
             </div>
             <div>
-              <p className="font-display text-sm font-bold text-ivory">Admin Panel</p>
-              <p className="text-[11px] text-slateMuted">{admin.role}</p>
+              <p className="font-display text-sm font-bold text-ivory">Portfolio CMS</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-slateMuted">{admin.role}</p>
             </div>
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="text-slateMuted lg:hidden">
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+              className="flex h-8 w-8 items-center justify-center border border-hairline bg-surface text-slateMuted hover:border-gold hover:text-gold"
+            >
+              {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            </button>
+            <button onClick={() => setSidebarOpen(false)} className="text-slateMuted lg:hidden">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">

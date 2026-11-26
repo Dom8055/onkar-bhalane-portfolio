@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, Download, Shield } from 'lucide-react';
+import { Download, Menu, Moon, Shield, Sun, X } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 import type { Profile, WebsiteSettings } from '../types/portfolio';
 
 interface NavbarProps {
@@ -14,13 +15,13 @@ const NAV_ITEMS = [
   { label: 'About', href: '#about' },
   { label: 'Expertise', href: '#skills' },
   { label: 'Experience', href: '#experience' },
-  { label: 'Projects', href: '#projects' },
+  { label: 'Work', href: '#projects' },
   { label: 'Achievements', href: '#achievements' },
-  { label: 'Education', href: '#education' },
   { label: 'Contact', href: '#contact' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick }) => {
+  const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -29,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 36);
+      setScrolled(window.scrollY > 28);
       if (!isHome) return;
       const sections = ['hero', 'about', 'skills', 'experience', 'projects', 'achievements', 'education', 'contact'];
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -49,28 +50,33 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'border-b border-white/[0.07] bg-obsidian/80 py-3 backdrop-blur-xl' : 'bg-transparent py-5'
+        scrolled
+          ? 'border-b border-hairline bg-obsidian/85 py-3.5 backdrop-blur-xl'
+          : 'border-b border-transparent bg-transparent py-5'
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link to="/" className="group flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-gold/40 bg-midnight font-display text-sm font-bold tracking-wider text-gold-light transition-transform duration-300 group-hover:scale-105 group-hover:border-gold">
+      <div className="mx-auto flex max-w-[1380px] items-center justify-between px-5 sm:px-10">
+        {/* Monogram & Wordmark */}
+        <Link to="/" className="group flex items-center gap-3.5">
+          <div className="flex h-9 w-9 items-center justify-center border border-gold/60 bg-obsidian font-display text-xs font-bold tracking-[0.2em] text-gold transition-colors group-hover:bg-gold group-hover:text-obsidian">
             {settings?.logo_url ? (
-              <img src={settings.logo_url} alt={logoText} className="h-7 w-7 rounded object-contain" />
+              <img src={settings.logo_url} alt={logoText} className="h-6 w-6 object-contain" />
             ) : (
               logoText
             )}
           </div>
           <div className="hidden sm:block">
-            <p className="font-display text-sm font-semibold tracking-wider text-ivory">
+            <p className="font-display text-sm font-semibold tracking-tight text-ivory">
               {profile?.name || 'Onkar Bhalane'}
             </p>
-            <p className="text-[11px] tracking-widest text-slateMuted">FLUTTER ENGINEER</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slateMuted">
+              Mobile Architect · Flutter
+            </p>
           </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary Navigation">
+        {/* Desktop Editorial Nav */}
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary Navigation">
           {NAV_ITEMS.map((item) => {
             const id = item.href.replace('#', '');
             const isActive = isHome && activeSection === id;
@@ -78,15 +84,15 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
               <a
                 key={item.href}
                 href={isHome ? item.href : `/${item.href}`}
-                className={`relative rounded-full px-3.5 py-2 text-xs font-medium tracking-wide transition-colors ${
-                  isActive ? 'text-gold-light' : 'text-slateMuted hover:text-ivory'
+                className={`relative py-1 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors ${
+                  isActive ? 'text-gold' : 'text-slateMuted hover:text-ivory'
                 }`}
               >
                 {item.label}
                 {isActive && (
                   <motion.span
-                    layoutId="nav-active-dot"
-                    className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-gold-light"
+                    layoutId="nav-underline"
+                    className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gold"
                   />
                 )}
               </a>
@@ -94,36 +100,58 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
           })}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden items-center gap-3 lg:flex">
+        {/* Right Controls: Theme Toggle, Resume, Admin */}
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            className="flex h-9 w-9 items-center justify-center border border-hairline bg-surface text-slateMuted transition-colors hover:border-gold hover:text-gold"
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
           <a
             href={profile?.resume_url || '/api/portfolio/resume'}
             onClick={onResumeClick}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-medium text-gold-light transition-all hover:border-gold hover:bg-gold/20"
+            className="inline-flex items-center gap-2 border border-gold/60 bg-gold/10 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-gold transition-all hover:bg-gold hover:text-[#080B12]"
           >
             <Download className="h-3.5 w-3.5" />
             Resume
           </a>
+
           <Link
             to="/admin"
-            title="Admin Panel"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-surface/60 text-slateMuted transition-colors hover:border-gold/40 hover:text-gold-light"
-            aria-label="Open Admin Panel"
+            title="Admin CMS"
+            aria-label="Open Admin CMS"
+            className="flex h-9 w-9 items-center justify-center border border-hairline bg-surface text-slateMuted transition-colors hover:border-gold hover:text-gold"
           >
             <Shield className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-surface/70 text-ivory lg:hidden"
-          aria-label="Toggle Menu"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile Controls */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="flex h-9 w-9 items-center justify-center border border-hairline bg-surface text-ivory"
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            className="flex h-9 w-9 items-center justify-center border border-hairline bg-surface text-ivory"
+            aria-label="Toggle Menu"
+          >
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -133,20 +161,20 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-b border-white/10 bg-obsidian/95 backdrop-blur-xl lg:hidden"
+            className="overflow-hidden border-b border-hairline bg-obsidian/95 backdrop-blur-xl lg:hidden"
           >
-            <div className="flex flex-col gap-1 px-6 py-5">
+            <div className="flex flex-col px-6 py-5">
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item.href}
                   href={isHome ? item.href : `/${item.href}`}
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-slateMuted hover:bg-surface hover:text-ivory"
+                  className="border-b border-hairline py-3.5 font-mono text-xs uppercase tracking-[0.2em] text-slateMuted hover:text-gold"
                 >
                   {item.label}
                 </a>
               ))}
-              <div className="mt-3 flex items-center gap-3 border-t border-white/10 pt-4">
+              <div className="mt-5 flex items-center gap-3">
                 <a
                   href={profile?.resume_url || '/api/portfolio/resume'}
                   onClick={() => {
@@ -155,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
                   }}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-obsidian"
+                  className="flex flex-1 items-center justify-center gap-2 bg-gold px-4 py-3 font-mono text-xs font-semibold uppercase tracking-widest text-[#080B12]"
                 >
                   <Download className="h-4 w-4" />
                   Download Resume
@@ -163,10 +191,10 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, settings, onResumeClick
                 <Link
                   to="/admin"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slateMuted"
+                  className="flex items-center justify-center gap-2 border border-hairline px-4 py-3 font-mono text-xs uppercase tracking-widest text-slateMuted"
                 >
                   <Shield className="h-4 w-4" />
-                  Admin
+                  CMS
                 </Link>
               </div>
             </div>
