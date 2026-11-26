@@ -30,6 +30,10 @@ export const ProfileManager: React.FC = () => {
         core_competencies: profile.core_competencies,
         stats: profile.stats,
         profile_image: profile.profile_image,
+        about_image: profile.about_image,
+        secondary_portrait: profile.secondary_portrait,
+        contact_image: profile.contact_image,
+        hero_background_image: profile.hero_background_image,
         location: profile.location,
         email: profile.email,
         phone: profile.phone,
@@ -44,14 +48,26 @@ export const ProfileManager: React.FC = () => {
     }
   };
 
-  const handleFileUpload = async (file: File, category: 'profile' | 'resume') => {
+  const handleFileUpload = async (
+    file: File,
+    field: 'profile_image' | 'about_image' | 'secondary_portrait' | 'contact_image' | 'hero_background_image' | 'resume'
+  ) => {
+    if (field !== 'resume' && !file.type.startsWith('image/')) {
+      setMessage('Please select a valid image file (WebP, PNG, JPG).');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage('File size must be under 10 MB.');
+      return;
+    }
     setUploadPct(0);
     try {
+      const category = field === 'resume' ? 'resume' : 'profile';
       const asset = await adminApi.uploadMedia(file, category, setUploadPct);
-      if (category === 'profile') {
-        const updated = await adminApi.updateProfile({ profile_image: asset.url });
+      if (field !== 'resume') {
+        const updated = await adminApi.updateProfile({ [field]: asset.url });
         setProfile(updated);
-        setMessage('Portrait image uploaded and saved.');
+        setMessage(`Updated ${field.replace(/_/g, ' ')} successfully.`);
       } else {
         setMessage('Resume PDF uploaded! The Download Resume button now serves the new PDF.');
       }
@@ -90,34 +106,51 @@ export const ProfileManager: React.FC = () => {
         </div>
       )}
 
-      {/* Portrait & Resume Uploads */}
-      <div className="grid gap-5 md:grid-cols-2">
-        <div className="glass-panel rounded-2xl p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold-light">Profile Portrait</p>
-          <div className="mt-3 flex items-center gap-4">
-            {profile.profile_image ? (
-              <img src={profile.profile_image} alt="Portrait" className="h-16 w-16 rounded-xl object-cover" />
-            ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-gold/30 bg-obsidian font-display font-bold text-gold-light">
-                OB
+      {/* Portrait, Hero, About, Contact & Resume Asset Slots */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {(
+          [
+            { key: 'profile_image', label: 'Hero Primary Portrait' },
+            { key: 'about_image', label: 'About Editorial Portrait' },
+            { key: 'secondary_portrait', label: 'About Alternate Portrait' },
+            { key: 'contact_image', label: 'Contact Section Portrait' },
+            { key: 'hero_background_image', label: 'Hero Wide Background' },
+          ] as const
+        ).map((slot) => {
+          const currentUrl = profile[slot.key];
+          return (
+            <div key={slot.key} className="glass-panel rounded-2xl p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gold-light">{slot.label}</p>
+              <div className="mt-3 flex items-center gap-3">
+                {currentUrl ? (
+                  <img
+                    src={currentUrl}
+                    alt={slot.label}
+                    className="h-16 w-16 shrink-0 rounded-xl border border-white/10 object-cover object-top"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-gold/30 bg-obsidian font-display text-xs font-bold text-gold-light">
+                    IMG
+                  </div>
+                )}
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/15 bg-obsidian px-3 py-2 text-xs font-medium text-ivory hover:border-gold">
+                  <Upload className="h-3.5 w-3.5 text-gold-light" />
+                  Replace
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], slot.key)}
+                  />
+                </label>
               </div>
-            )}
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/15 bg-obsidian px-4 py-2 text-xs font-medium text-ivory hover:border-gold">
-              <Upload className="h-3.5 w-3.5 text-gold-light" />
-              Upload Portrait
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'profile')}
-              />
-            </label>
-          </div>
-        </div>
+            </div>
+          );
+        })}
 
-        <div className="glass-panel rounded-2xl p-5">
+        <div className="glass-panel rounded-2xl p-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-gold-light">Resume PDF</p>
-          <div className="mt-3 flex items-center justify-between gap-4">
+          <div className="mt-3 flex flex-col gap-2.5">
             <a
               href="/api/portfolio/resume"
               target="_blank"
@@ -127,7 +160,7 @@ export const ProfileManager: React.FC = () => {
               <FileText className="h-4 w-4 text-gold-light" />
               Preview Current Resume
             </a>
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-medium text-gold-light hover:bg-gold/20">
+            <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-xs font-medium text-gold-light hover:bg-gold/20">
               <Upload className="h-3.5 w-3.5" />
               Upload New PDF
               <input

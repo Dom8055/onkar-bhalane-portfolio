@@ -61,7 +61,25 @@ export const ContactSection: React.FC<{ profile: Profile }> = ({ profile }) => {
               Whether you are hiring a Flutter engineer, launching a new Android & iOS product, or scaling an existing mobile platform, let&apos;s talk.
             </p>
 
-            <div className="mt-8 space-y-4">
+            {/* Editorial Contact Portrait Card */}
+            {(profile.contact_image || '/assets/portraits/portrait_editorial_thoughtful_black_blazer.webp') && (
+              <div className="glass-panel mt-6 flex items-center gap-4 overflow-hidden rounded-2xl p-3">
+                <img
+                  src={profile.contact_image || '/assets/portraits/portrait_editorial_thoughtful_black_blazer.webp'}
+                  alt={`${profile.name} — Direct Contact`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-20 w-20 shrink-0 rounded-xl border border-gold/30 object-cover object-top"
+                />
+                <div>
+                  <p className="font-display text-base font-semibold text-ivory">{profile.name}</p>
+                  <p className="text-xs text-gold-light">{profile.title}</p>
+                  <p className="mt-1 text-[11px] text-slateMuted">Direct response for engineering roles & mobile builds.</p>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 space-y-4">
               <a
                 href={`mailto:${profile.email}`}
                 className="glass-panel flex items-center gap-4 rounded-2xl p-4 transition-colors hover:border-gold/40"

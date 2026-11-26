@@ -22,6 +22,10 @@ export interface Profile {
   core_competencies: string[];
   stats: HeroStat[];
   profile_image: string;
+  about_image?: string;
+  secondary_portrait?: string;
+  contact_image?: string;
+  hero_background_image?: string;
   resume_url: string;
   location: string;
   email: string;

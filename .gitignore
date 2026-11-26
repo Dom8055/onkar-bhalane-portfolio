@@ -26,3 +26,6 @@ npm-debug.log*
 .vscode/
 .idea/
 Thumbs.db
+
+# Local high-res PNG originals (WebP versions are committed in frontend/public/assets/)
+uploads/originals/

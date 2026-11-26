@@ -22,13 +22,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, animationsEna
     .slice(0, 2)
     .toUpperCase();
 
+  const heroBg = profile.hero_background_image || '/assets/backgrounds/hero_portrait_wide_composition.webp';
+  const heroPortrait = profile.profile_image || '/assets/portraits/portrait_corporate_black_suit_gold_tie.webp';
+
   return (
     <section
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-obsidian pb-20 pt-28 sm:pt-32"
     >
+      {/* Subtle Wide Editorial Background Composition */}
+      {heroBg && (
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          <img
+            src={heroBg}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover object-center opacity-[0.14] mix-blend-luminosity scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/88 to-obsidian/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-obsidian/75" />
+        </div>
+      )}
+
       {/* Ambient Grid & Gold Radial Lighting */}
-      <div className="pointer-events-none absolute inset-0 bg-ambient-grid opacity-50" />
+      <div className="pointer-events-none absolute inset-0 bg-ambient-grid opacity-45" />
       <div className="pointer-events-none absolute -left-32 top-1/4 h-[480px] w-[480px] rounded-full bg-gold/10 blur-[120px]" />
       <div className="pointer-events-none absolute -right-24 bottom-12 h-[420px] w-[420px] rounded-full bg-indigo-500/10 blur-[120px]" />
 
@@ -164,13 +181,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, animationsEna
               <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/20 blur-3xl" />
 
               {/* Portrait Frame */}
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-midnight via-surface to-obsidian">
-                {profile.profile_image ? (
-                  <img
-                    src={profile.profile_image}
-                    alt={profile.name}
-                    className="h-72 w-full object-cover object-top"
-                  />
+              <div className="group relative overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-midnight via-surface to-obsidian">
+                {heroPortrait ? (
+                  <div className="relative aspect-[4/4.4] w-full overflow-hidden">
+                    <img
+                      src={heroPortrait}
+                      alt={`${profile.name} — ${profile.title}`}
+                      width={1086}
+                      height={1448}
+                      fetchPriority="high"
+                      className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-obsidian/85 via-obsidian/15 to-transparent" />
+                    <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between rounded-xl border border-white/10 bg-obsidian/75 px-3.5 py-2 backdrop-blur-md">
+                      <div>
+                        <p className="font-display text-sm font-semibold text-ivory">{profile.name}</p>
+                        <p className="flex items-center gap-1 text-[11px] text-slateMuted">
+                          <MapPin className="h-3 w-3 text-gold-light" />
+                          {profile.location}
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-gold/35 bg-gold/15 px-2.5 py-0.5 font-mono text-[10px] text-gold-light">
+                        FLUTTER
+                      </span>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex h-72 flex-col items-center justify-center p-8 text-center">
                     <div className="relative flex h-28 w-28 items-center justify-center rounded-full border-2 border-gold/50 bg-obsidian/90 shadow-goldGlow">

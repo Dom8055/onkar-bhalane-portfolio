@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, CheckCircle2, KeyRound, Save } from 'lucide-react';
+import { ArrowDown, ArrowUp, CheckCircle2, KeyRound, Save, Upload } from 'lucide-react';
 import { adminApi, authApi } from '../services/api';
 import type { WebsiteSettings } from '../types/portfolio';
 
@@ -119,6 +119,40 @@ export const CmsSettingsManager: React.FC = () => {
               onChange={(e) => setSettings({ ...settings, seo_description: e.target.value })}
               className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
             />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="text-xs uppercase text-slateMuted">Social Media Share Image (Open Graph / Twitter)</label>
+            <div className="mt-2 flex flex-wrap items-center gap-4">
+              {settings.og_image && (
+                <img
+                  src={settings.og_image}
+                  alt="Social OG Preview"
+                  className="h-16 w-28 rounded-xl border border-white/10 object-cover"
+                />
+              )}
+              <input
+                value={settings.og_image || ''}
+                onChange={(e) => setSettings({ ...settings, og_image: e.target.value })}
+                placeholder="/assets/social-media/og_hero_banner.webp"
+                className="flex-1 rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+              />
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-medium text-gold-light hover:bg-gold/20">
+                <Upload className="h-3.5 w-3.5" />
+                Upload OG Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const asset = await adminApi.uploadMedia(file, 'general');
+                    setSettings({ ...settings, og_image: asset.url });
+                    setNotice('Social share image uploaded — click Save Settings to publish.');
+                  }}
+                />
+              </label>
+            </div>
           </div>
           <div className="sm:col-span-2">
             <label className="text-xs uppercase text-slateMuted">Footer Tagline</label>

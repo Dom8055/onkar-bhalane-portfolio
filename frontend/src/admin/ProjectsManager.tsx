@@ -343,7 +343,46 @@ export const ProjectsManager: React.FC = () => {
                   </label>
                 </div>
                 {editing.cover_image && (
-                  <p className="mt-2 text-xs text-emerald-300">Cover set: {editing.cover_image}</p>
+                  <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/10 bg-obsidian/70 p-2.5">
+                    <img
+                      src={editing.cover_image}
+                      alt="Cover preview"
+                      className="h-14 w-24 rounded-lg object-cover"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-emerald-300">Cover Thumbnail Active</p>
+                      <p className="truncate text-[11px] text-slateMuted">{editing.cover_image}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditing({ ...editing, cover_image: '' })}
+                      className="rounded-lg border border-rose-500/25 px-2.5 py-1 text-[11px] text-rose-300 hover:bg-rose-500/10"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                {(editing.gallery_images?.length || 0) > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {editing.gallery_images!.map((url, idx) => (
+                      <div key={url + idx} className="group relative h-16 w-24 overflow-hidden rounded-lg border border-white/10">
+                        <img src={url} alt={`Gallery ${idx + 1}`} className="h-full w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditing({
+                              ...editing,
+                              gallery_images: editing.gallery_images!.filter((_, i) => i !== idx),
+                            })
+                          }
+                          className="absolute right-1 top-1 rounded-full bg-black/75 p-0.5 text-rose-300 opacity-0 transition-opacity group-hover:opacity-100"
+                          title="Remove screenshot"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
 

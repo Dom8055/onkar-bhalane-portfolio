@@ -35,11 +35,24 @@ function AnimatedCounter({ value }: { value: string }) {
 }
 
 export const AboutSection: React.FC<{ profile: Profile }> = ({ profile }) => {
+  const portraits = [
+    {
+      src: profile.about_image || '/assets/portraits/portrait_cinematic_black_turtleneck.webp',
+      label: 'Studio Editorial',
+    },
+    {
+      src: profile.secondary_portrait || '/assets/portraits/portrait_editorial_seated_black_suit.webp',
+      label: 'Executive Portrait',
+    },
+  ].filter((p) => Boolean(p.src));
+
+  const [activePortrait, setActivePortrait] = useState(0);
+
   return (
     <section id="about" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-12 lg:grid-cols-12">
-          {/* Editorial Heading */}
+        <div className="grid items-start gap-12 lg:grid-cols-12">
+          {/* Editorial Heading & Portraits */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -59,8 +72,55 @@ export const AboutSection: React.FC<{ profile: Profile }> = ({ profile }) => {
               {profile.subtitle}
             </p>
 
+            {/* Editorial Portrait Showcase */}
+            {portraits.length > 0 && (
+              <div className="mt-8">
+                <div className="glass-panel-gold group relative overflow-hidden rounded-3xl p-3 shadow-card">
+                  <div className="relative aspect-[4/4.6] w-full overflow-hidden rounded-2xl bg-midnight">
+                    <motion.img
+                      key={portraits[activePortrait].src}
+                      src={portraits[activePortrait].src}
+                      alt={`${profile.name} — ${portraits[activePortrait].label}`}
+                      loading="lazy"
+                      decoding="async"
+                      initial={{ opacity: 0, scale: 1.03 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.45 }}
+                      className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-obsidian/70 via-transparent to-transparent" />
+                  </div>
+
+                  {portraits.length > 1 && (
+                    <div className="mt-3 flex items-center justify-between gap-2 px-1">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-gold-light">
+                        {portraits[activePortrait].label}
+                      </span>
+                      <div className="flex gap-2">
+                        {portraits.map((p, idx) => (
+                          <button
+                            key={p.src}
+                            type="button"
+                            onClick={() => setActivePortrait(idx)}
+                            aria-label={`View ${p.label}`}
+                            className={`h-9 w-9 overflow-hidden rounded-lg border transition-all ${
+                              activePortrait === idx
+                                ? 'border-gold ring-2 ring-gold/40'
+                                : 'border-white/15 opacity-60 hover:opacity-100'
+                            }`}
+                          >
+                            <img src={p.src} alt={p.label} loading="lazy" className="h-full w-full object-cover object-top" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Animated KPI Strip */}
-            <div className="mt-8 grid grid-cols-2 gap-4">
+            <div className="mt-6 grid grid-cols-2 gap-4">
               {(profile.stats || []).map((s, idx) => (
                 <motion.div
                   key={s.label}

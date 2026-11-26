@@ -82,7 +82,11 @@ async def seed_database(db: Any) -> None:
                     {"value": "5", "label": "Industry Domains"},
                     {"value": "5", "label": "Backend Stacks Integrated"},
                 ],
-                "profile_image": "",
+                "profile_image": "/assets/portraits/portrait_corporate_black_suit_gold_tie.webp",
+                "about_image": "/assets/portraits/portrait_cinematic_black_turtleneck.webp",
+                "secondary_portrait": "/assets/portraits/portrait_editorial_seated_black_suit.webp",
+                "contact_image": "/assets/portraits/portrait_editorial_thoughtful_black_blazer.webp",
+                "hero_background_image": "/assets/backgrounds/hero_portrait_wide_composition.webp",
                 "resume_url": "/api/portfolio/resume",
                 "location": "Nagpur, Maharashtra, India",
                 "email": "obhalane@gmail.com",
@@ -280,7 +284,7 @@ async def seed_database(db: Any) -> None:
                     "Implemented secure authentication and scalable state management for high performance.",
                 ],
                 "technologies": ["Flutter", "Dart", "REST API", "GetX"],
-                "cover_image": "",
+                "cover_image": "/assets/projects/purti-super-bazar/purti_super_bazar_promotional_mockup.webp",
                 "gallery_images": [],
                 "google_play_url": "https://play.google.com/store/apps/details?id=com.purtibazar.app",
                 "app_store_url": "https://apps.apple.com/in/app/purti-super-bazar/id6755988238",
@@ -339,7 +343,7 @@ async def seed_database(db: Any) -> None:
                     "Managed 3 role-based login logics, flows, and screens within a single application.",
                 ],
                 "technologies": ["Flutter", "Dart", "REST API", "GetX", "Node.js"],
-                "cover_image": "",
+                "cover_image": "/assets/projects/insta-wash-clean/insta_wash_clean_promotional_mockup.webp",
                 "gallery_images": [],
                 "google_play_url": "https://play.google.com/store/apps/details?id=com.dhandabadhao.laundry_delivery",
                 "app_store_url": "https://apps.apple.com/in/app/insta-wash-clean/id6769475965",
@@ -349,7 +353,7 @@ async def seed_database(db: Any) -> None:
                 "is_featured": True,
                 "is_published": True,
                 "order": 3,
-                "accent_color": "#D8B779",
+                "accent_color": "#2563EB",
             },
             {
                 "title": "Healthcare Appointment Platform",
@@ -705,7 +709,7 @@ async def seed_database(db: Any) -> None:
                 "maintenance_message": "Portfolio is currently undergoing scheduled maintenance. Please check back shortly.",
                 "seo_description": "Portfolio of Onkar Bhalane — Flutter Developer with 4+ years of experience shipping 10+ production Android & iOS applications.",
                 "seo_keywords": "Onkar Bhalane, Flutter Developer, Mobile Application Engineer, Dart, GetX, Android, iOS, Nagpur",
-                "og_image": "",
+                "og_image": "/assets/social-media/og_hero_banner.webp",
                 "analytics_enabled": True,
                 "ga_measurement_id": "",
                 "footer_tagline": "Crafting production-grade mobile experiences for Android & iOS.",
@@ -723,4 +727,47 @@ async def seed_database(db: Any) -> None:
                 "created_at": ts,
                 "updated_at": ts,
             }
+        )
+
+    # 9. Idempotent V1 Asset Backfill (fills empty image fields on existing Atlas DBs without overwriting admin uploads)
+    profile_doc = await db.profiles.find_one({})
+    if profile_doc:
+        profile_patch = {}
+        defaults = {
+            "profile_image": "/assets/portraits/portrait_corporate_black_suit_gold_tie.webp",
+            "about_image": "/assets/portraits/portrait_cinematic_black_turtleneck.webp",
+            "secondary_portrait": "/assets/portraits/portrait_editorial_seated_black_suit.webp",
+            "contact_image": "/assets/portraits/portrait_editorial_thoughtful_black_blazer.webp",
+            "hero_background_image": "/assets/backgrounds/hero_portrait_wide_composition.webp",
+        }
+        for key, val in defaults.items():
+            if not profile_doc.get(key):
+                profile_patch[key] = val
+        if profile_patch:
+            profile_patch["updated_at"] = ts
+            await db.profiles.update_one({"_id": profile_doc["_id"]}, {"$set": profile_patch})
+
+    project_asset_defaults = {
+        "purti-super-bazar": {
+            "cover_image": "/assets/projects/purti-super-bazar/purti_super_bazar_promotional_mockup.webp",
+            "accent_color": "#B68B50",
+        },
+        "insta-wash-clean": {
+            "cover_image": "/assets/projects/insta-wash-clean/insta_wash_clean_promotional_mockup.webp",
+            "accent_color": "#2563EB",
+        },
+    }
+    for slug, asset_cfg in project_asset_defaults.items():
+        proj_doc = await db.projects.find_one({"slug": slug})
+        if proj_doc and not proj_doc.get("cover_image"):
+            await db.projects.update_one(
+                {"_id": proj_doc["_id"]},
+                {"$set": {**asset_cfg, "updated_at": ts}},
+            )
+
+    settings_doc = await db.website_settings.find_one({})
+    if settings_doc and not settings_doc.get("og_image"):
+        await db.website_settings.update_one(
+            {"_id": settings_doc["_id"]},
+            {"$set": {"og_image": "/assets/social-media/og_hero_banner.webp", "updated_at": ts}},
         )

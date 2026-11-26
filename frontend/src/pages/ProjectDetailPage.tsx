@@ -12,7 +12,7 @@ import {
   Star,
 } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
-import { ProjectVisual } from '../components/ProjectVisual';
+import { ProjectGallery } from '../components/ProjectGallery';
 import { SEOHead } from '../components/SEOHead';
 import { FooterSection } from '../sections/FooterSection';
 import { usePortfolio } from '../hooks/usePortfolio';
@@ -24,7 +24,6 @@ export const ProjectDetailPage: React.FC = () => {
   const { data } = usePortfolio();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,7 +33,6 @@ export const ProjectDetailPage: React.FC = () => {
       .getProjectBySlug(slug)
       .then((p) => {
         setProject(p);
-        setActiveImage(p.cover_image || p.gallery_images?.[0] || null);
         portfolioApi.trackEvent('project_view', `/projects/${slug}`, p.title);
       })
       .catch(() => setProject(null))
@@ -64,8 +62,7 @@ export const ProjectDetailPage: React.FC = () => {
   const currentIdx = allProjects.findIndex((p) => p.slug === project.slug);
   const prevProject = currentIdx > 0 ? allProjects[currentIdx - 1] : null;
   const nextProject = currentIdx >= 0 && currentIdx < allProjects.length - 1 ? allProjects[currentIdx + 1] : null;
-
-  const gallery = [project.cover_image, ...(project.gallery_images || [])].filter(Boolean);
+  const isBlueTheme = project.slug === 'insta-wash-clean' || project.accent_color?.toLowerCase() === '#2563eb';
 
   return (
     <div className="min-h-screen bg-obsidian text-ivory">
@@ -88,7 +85,13 @@ export const ProjectDetailPage: React.FC = () => {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1 font-mono text-xs uppercase tracking-widest text-gold-light">
+            <span
+              className={`rounded-full border px-3 py-1 font-mono text-xs uppercase tracking-widest ${
+                isBlueTheme
+                  ? 'border-sky-400/40 bg-blue-500/15 text-sky-300'
+                  : 'border-gold/30 bg-gold/10 text-gold-light'
+              }`}
+            >
               {project.industry_badge || project.category}
             </span>
             {project.is_featured && (
@@ -169,30 +172,10 @@ export const ProjectDetailPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Hero Visual / Gallery */}
-        <div className="mt-10 overflow-hidden rounded-3xl border border-white/10">
-          {activeImage ? (
-            <img src={activeImage} alt={project.title} className="max-h-[480px] w-full bg-midnight object-contain" />
-          ) : (
-            <ProjectVisual project={project} className="h-80" />
-          )}
+        {/* Interactive Project Visual Gallery */}
+        <div className="mt-10">
+          <ProjectGallery project={project} />
         </div>
-
-        {gallery.length > 1 && (
-          <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
-            {gallery.map((imgUrl, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImage(imgUrl)}
-                className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl border transition-all ${
-                  activeImage === imgUrl ? 'border-gold ring-2 ring-gold/40' : 'border-white/10 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img src={imgUrl} alt={`${project.title} screen ${idx + 1}`} className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Contributions & Technology Stack */}
         <div className="mt-12 grid gap-8 md:grid-cols-12">

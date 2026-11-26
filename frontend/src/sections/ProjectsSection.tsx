@@ -95,7 +95,10 @@ export const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects })
         {/* Project Cards Grid */}
         <motion.div layout className="mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
-            {filtered.map((project) => (
+            {filtered.map((project) => {
+              const isBlueTheme =
+                project.slug === 'insta-wash-clean' || project.accent_color?.toLowerCase() === '#2563eb';
+              return (
               <motion.article
                 key={project.id}
                 layout
@@ -103,15 +106,23 @@ export const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects })
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.4 }}
-                className="group glass-panel flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/40 hover:shadow-goldGlow"
+                className={`group glass-panel flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1.5 ${
+                  isBlueTheme
+                    ? 'hover:border-blue-500/50 hover:shadow-[0_0_40px_-10px_rgba(37,99,235,0.45)]'
+                    : 'hover:border-gold/40 hover:shadow-goldGlow'
+                }`}
               >
                 <Link to={`/projects/${project.slug}`} className="block">
-                  <ProjectVisual project={project} className="h-52" />
+                  <ProjectVisual project={project} className="aspect-[16/9] w-full" />
                 </Link>
 
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-gold-light">
+                    <span
+                      className={`font-mono text-[10px] uppercase tracking-widest ${
+                        isBlueTheme ? 'text-sky-400' : 'text-gold-light'
+                      }`}
+                    >
                       {project.industry_badge || project.category}
                     </span>
                     {project.is_featured && (
@@ -176,7 +187,9 @@ export const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects })
 
                     <Link
                       to={`/projects/${project.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-gold-light transition-transform group-hover:translate-x-0.5"
+                      className={`inline-flex items-center gap-1 text-xs font-semibold transition-transform group-hover:translate-x-0.5 ${
+                        isBlueTheme ? 'text-sky-400' : 'text-gold-light'
+                      }`}
                     >
                       Case Study
                       <ArrowUpRight className="h-3.5 w-3.5" />
@@ -184,7 +197,8 @@ export const ProjectsSection: React.FC<{ projects: Project[] }> = ({ projects })
                   </div>
                 </div>
               </motion.article>
-            ))}
+              );
+            })}
           </AnimatePresence>
         </motion.div>
 

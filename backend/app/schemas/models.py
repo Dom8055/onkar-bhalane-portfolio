@@ -66,6 +66,10 @@ class ProfileUpdate(BaseModel):
     core_competencies: Optional[List[str]] = None
     stats: Optional[List[HeroStat]] = None
     profile_image: Optional[str] = None
+    about_image: Optional[str] = None
+    secondary_portrait: Optional[str] = None
+    contact_image: Optional[str] = None
+    hero_background_image: Optional[str] = None
     resume_url: Optional[str] = None
     location: Optional[str] = None
     email: Optional[EmailStr] = None
