@@ -18,6 +18,63 @@ export const ProjectVisual: React.FC<ProjectVisualProps> = ({ project, className
 
   if (project.cover_image) {
     const isConcept = project.cover_image.includes('promotional_mockup');
+    const realScreens = (project.gallery_images || []).filter((u) => !u.includes('promotional_mockup'));
+
+    // Studio 3-phone fan composition for real vertical mobile app screenshots
+    if (!isConcept && realScreens.length >= 3) {
+      return (
+        <div
+          className={`relative flex items-end justify-center overflow-hidden bg-gradient-to-br from-[#121A2B] via-[#0B101B] to-[#080B12] px-4 pt-5 ${className}`}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-ambient-grid opacity-45" />
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{ background: `radial-gradient(circle, ${accent}38 0%, transparent 70%)` }}
+          />
+
+          <span className="absolute right-3 top-3 z-20 rounded-full border border-emerald-400/35 bg-obsidian/80 px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-emerald-300 backdrop-blur-md">
+            {realScreens.length} App Screens
+          </span>
+
+          <div className="relative z-10 flex h-full w-full items-end justify-center gap-2">
+            {/* Left Phone */}
+            <div className="h-[82%] w-[28%] -rotate-6 translate-y-2 overflow-hidden rounded-t-2xl border border-white/15 bg-black shadow-2xl transition-transform duration-500 group-hover:-translate-x-1 group-hover:-rotate-8">
+              <img
+                src={realScreens[1]}
+                alt={`${project.title} screen 2`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+
+            {/* Center Hero Phone */}
+            <div className="z-10 h-[94%] w-[33%] overflow-hidden rounded-t-2xl border border-gold/45 bg-black shadow-goldGlow transition-transform duration-500 group-hover:-translate-y-1">
+              <img
+                src={realScreens[0]}
+                alt={`${project.title} primary screen`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+
+            {/* Right Phone */}
+            <div className="h-[82%] w-[28%] rotate-6 translate-y-2 overflow-hidden rounded-t-2xl border border-white/15 bg-black shadow-2xl transition-transform duration-500 group-hover:translate-x-1 group-hover:rotate-8">
+              <img
+                src={realScreens[2]}
+                alt={`${project.title} screen 3`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-10 bg-gradient-to-t from-obsidian/90 to-transparent" />
+        </div>
+      );
+    }
+
     return (
       <div className={`relative overflow-hidden bg-midnight ${className}`}>
         <img

@@ -47,7 +47,17 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ project }) => {
         className="group relative overflow-hidden rounded-3xl border bg-midnight shadow-card"
         style={{ borderColor: `${accent}44` }}
       >
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-obsidian">
+        <div
+          className={`relative w-full overflow-hidden bg-obsidian ${
+            isConcept ? 'aspect-[16/9]' : 'flex min-h-[420px] max-h-[600px] items-center justify-center bg-gradient-to-br from-[#101624] via-[#0A0F1A] to-[#080B12] p-6 sm:p-8'
+          }`}
+        >
+          {!isConcept && (
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-35"
+              style={{ background: `radial-gradient(circle, ${accent} 0%, transparent 70%)` }}
+            />
+          )}
           <AnimatePresence mode="wait">
             <motion.img
               key={activeUrl}
@@ -57,7 +67,11 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ project }) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
-              className="h-full w-full object-cover"
+              className={
+                isConcept
+                  ? 'h-full w-full object-cover'
+                  : 'relative z-10 max-h-[540px] w-auto rounded-2xl border border-white/15 object-contain shadow-2xl'
+              }
             />
           </AnimatePresence>
 

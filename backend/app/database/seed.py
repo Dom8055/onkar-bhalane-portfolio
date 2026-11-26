@@ -313,8 +313,17 @@ async def seed_database(db: Any) -> None:
                     "Built a fast, minimal UI with authenticated profile management.",
                 ],
                 "technologies": ["Flutter", "Dart", "REST API", "GetX"],
-                "cover_image": "",
-                "gallery_images": [],
+                "cover_image": "/assets/projects/purti-delivery-partner/02_assigned_orders.jpg",
+                "gallery_images": [
+                    "/assets/projects/purti-delivery-partner/02_assigned_orders.jpg",
+                    "/assets/projects/purti-delivery-partner/03_order_details_navigation.jpg",
+                    "/assets/projects/purti-delivery-partner/04_item_verification_payment.jpg",
+                    "/assets/projects/purti-delivery-partner/05_delivery_status_timeline.jpg",
+                    "/assets/projects/purti-delivery-partner/06_cash_settlement_confirmation.jpg",
+                    "/assets/projects/purti-delivery-partner/07_order_completed.jpg",
+                    "/assets/projects/purti-delivery-partner/08_past_orders.jpg",
+                    "/assets/projects/purti-delivery-partner/01_splash_screen.jpg",
+                ],
                 "google_play_url": "https://play.google.com/store/apps/details?id=com.app.purtiriderapp",
                 "app_store_url": "https://apps.apple.com/app/rider-purti-super-bazar/id6771723062",
                 "github_url": "",
@@ -752,6 +761,20 @@ async def seed_database(db: Any) -> None:
             "cover_image": "/assets/projects/purti-super-bazar/purti_super_bazar_promotional_mockup.webp",
             "accent_color": "#B68B50",
         },
+        "purti-delivery-partner": {
+            "cover_image": "/assets/projects/purti-delivery-partner/02_assigned_orders.jpg",
+            "gallery_images": [
+                "/assets/projects/purti-delivery-partner/02_assigned_orders.jpg",
+                "/assets/projects/purti-delivery-partner/03_order_details_navigation.jpg",
+                "/assets/projects/purti-delivery-partner/04_item_verification_payment.jpg",
+                "/assets/projects/purti-delivery-partner/05_delivery_status_timeline.jpg",
+                "/assets/projects/purti-delivery-partner/06_cash_settlement_confirmation.jpg",
+                "/assets/projects/purti-delivery-partner/07_order_completed.jpg",
+                "/assets/projects/purti-delivery-partner/08_past_orders.jpg",
+                "/assets/projects/purti-delivery-partner/01_splash_screen.jpg",
+            ],
+            "accent_color": "#10B981",
+        },
         "insta-wash-clean": {
             "cover_image": "/assets/projects/insta-wash-clean/insta_wash_clean_promotional_mockup.webp",
             "accent_color": "#2563EB",
@@ -759,11 +782,17 @@ async def seed_database(db: Any) -> None:
     }
     for slug, asset_cfg in project_asset_defaults.items():
         proj_doc = await db.projects.find_one({"slug": slug})
-        if proj_doc and not proj_doc.get("cover_image"):
-            await db.projects.update_one(
-                {"_id": proj_doc["_id"]},
-                {"$set": {**asset_cfg, "updated_at": ts}},
-            )
+        if proj_doc:
+            patch = {}
+            if not proj_doc.get("cover_image") and asset_cfg.get("cover_image"):
+                patch["cover_image"] = asset_cfg["cover_image"]
+                if asset_cfg.get("accent_color"):
+                    patch["accent_color"] = asset_cfg["accent_color"]
+            if not proj_doc.get("gallery_images") and asset_cfg.get("gallery_images"):
+                patch["gallery_images"] = asset_cfg["gallery_images"]
+            if patch:
+                patch["updated_at"] = ts
+                await db.projects.update_one({"_id": proj_doc["_id"]}, {"$set": patch})
 
     settings_doc = await db.website_settings.find_one({})
     if settings_doc and not settings_doc.get("og_image"):
