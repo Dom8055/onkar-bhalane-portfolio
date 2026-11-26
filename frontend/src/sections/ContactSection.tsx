@@ -143,7 +143,7 @@ export const ContactSection: React.FC<{ profile: Profile }> = ({ profile }) => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-7"
           >
-            <form onSubmit={handleSubmit} className="border border-hairline bg-surface p-7 sm:p-10">
+            <form onSubmit={handleSubmit} className="liquid-glass-elevated rounded-[28px] p-7 sm:p-10">
               <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-gold">Direct Inquiry</p>
               <h3 className="mt-1 font-display text-2xl font-bold text-ivory">Send a Message</h3>
 
@@ -237,7 +237,7 @@ export const ContactSection: React.FC<{ profile: Profile }> = ({ profile }) => {
                 <MagneticButton
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex w-full items-center justify-center gap-2.5 bg-gold px-8 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#080B12] transition-opacity disabled:opacity-60 sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-gold to-gold-light px-8 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#080B12] shadow-goldGlow transition-opacity disabled:opacity-60 sm:w-auto"
                 >
                   <Send className="h-3.5 w-3.5" />
                   {submitting ? 'Transmitting...' : 'Send Message'}

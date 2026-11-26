@@ -32,6 +32,7 @@ import {
   Wrench,
   Zap,
 } from 'lucide-react';
+import { LiquidGlassNavigation } from '../components/liquid-glass';
 import type { Skill } from '../types/portfolio';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -106,25 +107,14 @@ export const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
           </p>
         </div>
 
-        {/* Architectural Filter Bar */}
-        <div className="mt-8 flex flex-wrap gap-2">
-          {categories.map((cat) => {
-            const active = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
-                  active
-                    ? 'border-gold bg-gold font-semibold text-[#080B12]'
-                    : 'border-hairline bg-surface text-slateMuted hover:border-gold/60 hover:text-ivory'
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
+        {/* Liquid Glass Segmented Filter Bar */}
+        <div className="mt-8">
+          <LiquidGlassNavigation
+            items={categories}
+            active={selectedCategory}
+            onChange={setSelectedCategory}
+            layoutId="skills-filter-pill"
+          />
         </div>
 
         {/* Editorial Matrix */}

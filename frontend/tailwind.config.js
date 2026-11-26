@@ -12,6 +12,7 @@ export default {
         ivory: 'var(--text-primary)',
         slateMuted: 'var(--text-secondary)',
         hairline: 'var(--border-subtle)',
+        electric: '#477BFF',
         gold: {
           DEFAULT: 'var(--color-accent)',
           light: 'var(--color-accent-soft)',
@@ -28,6 +29,7 @@ export default {
       boxShadow: {
         goldGlow: 'var(--shadow-accent)',
         card: 'var(--shadow-elevated)',
+        liquid: 'var(--shadow-liquid)',
       },
       backgroundImage: {
         'radial-gold': 'radial-gradient(circle at center, var(--color-accent-muted) 0%, transparent 70%)',

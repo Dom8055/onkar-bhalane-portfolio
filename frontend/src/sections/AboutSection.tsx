@@ -71,46 +71,46 @@ export const AboutSection: React.FC<{ profile: Profile }> = ({ profile }) => {
           >
             {portraits.length > 0 && (
               <div className="relative">
-                <div
-                  data-cursor-label="SWITCH"
-                  onClick={() => portraits.length > 1 && setActivePortrait((p) => (p + 1) % portraits.length)}
-                  className="group relative cursor-pointer overflow-hidden border border-hairline bg-midnight"
-                >
-                  <div className="relative aspect-[4/4.8] w-full overflow-hidden">
-                    <motion.img
-                      key={portraits[activePortrait].src}
-                      src={portraits[activePortrait].src}
-                      alt={`${profile.name} — ${portraits[activePortrait].label}`}
-                      loading="lazy"
-                      decoding="async"
-                      initial={{ opacity: 0, scale: 1.04 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5 }}
-                      className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between border-t border-hairline bg-surface px-4 py-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold">
-                      {portraits[activePortrait].label}
-                    </span>
-                    <div className="flex gap-1.5">
-                      {portraits.map((p, idx) => (
-                        <button
-                          key={p.src}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActivePortrait(idx);
-                          }}
-                          className={`h-1.5 transition-all ${
-                            activePortrait === idx ? 'w-7 bg-gold' : 'w-2.5 bg-slateMuted/40 hover:bg-slateMuted'
-                          }`}
-                          aria-label={p.label}
-                        />
-                      ))}
+                  <div
+                    data-cursor-label="SWITCH"
+                    onClick={() => portraits.length > 1 && setActivePortrait((p) => (p + 1) % portraits.length)}
+                    className="liquid-glass-elevated group relative cursor-pointer overflow-hidden rounded-[26px] p-3"
+                  >
+                    <div className="relative aspect-[4/4.7] w-full overflow-hidden rounded-[20px]">
+                      <motion.img
+                        key={portraits[activePortrait].src}
+                        src={portraits[activePortrait].src}
+                        alt={`${profile.name} — ${portraits[activePortrait].label}`}
+                        loading="lazy"
+                        decoding="async"
+                        initial={{ opacity: 0, scale: 1.04 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                    <div className="mt-3 flex items-center justify-between px-2 pb-1">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold">
+                        {portraits[activePortrait].label}
+                      </span>
+                      <div className="flex gap-1.5">
+                        {portraits.map((p, idx) => (
+                          <button
+                            key={p.src}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActivePortrait(idx);
+                            }}
+                            className={`h-1.5 rounded-full transition-all ${
+                              activePortrait === idx ? 'w-7 bg-gold' : 'w-2.5 bg-slateMuted/40 hover:bg-slateMuted'
+                            }`}
+                            aria-label={p.label}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
               </div>
             )}
 
