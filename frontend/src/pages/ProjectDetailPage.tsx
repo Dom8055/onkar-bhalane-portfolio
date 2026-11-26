@@ -6,6 +6,7 @@ import { CustomCursor } from '../components/CustomCursor';
 import { Navbar } from '../components/Navbar';
 import { ProjectGallery } from '../components/ProjectGallery';
 import { SEOHead } from '../components/SEOHead';
+import { LiquidGlassCard, LiquidGlassPanel } from '../components/liquid-glass';
 import { FooterSection } from '../sections/FooterSection';
 import { usePortfolio } from '../hooks/usePortfolio';
 import { portfolioApi } from '../services/api';
@@ -204,13 +205,13 @@ export const ProjectDetailPage: React.FC = () => {
 
           {/* Sticky Metadata Rail */}
           <aside className="lg:sticky lg:top-28 lg:col-span-4 lg:self-start">
-            <div className="border border-hairline bg-surface p-6">
+            <LiquidGlassPanel className="p-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slateMuted">Technology Stack</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {project.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="border border-hairline bg-obsidian px-3 py-1.5 font-mono text-[11px] text-ivory"
+                    className="rounded-full border border-hairline bg-obsidian/50 px-3 py-1 font-mono text-[11px] text-ivory"
                   >
                     {tech}
                   </span>
@@ -221,37 +222,35 @@ export const ProjectDetailPage: React.FC = () => {
                 <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slateMuted">Category</p>
                 <p className="mt-1 font-display text-base font-semibold text-ivory">{project.category}</p>
               </div>
-            </div>
+            </LiquidGlassPanel>
           </aside>
         </div>
 
-        {/* Prev / Next Editorial Footer Navigation */}
+        {/* Prev / Next Liquid Glass Footer Navigation */}
         <div className="mt-16 grid gap-4 border-t border-hairline pt-8 sm:grid-cols-2">
           {prevProject ? (
-            <Link
-              to={`/projects/${prevProject.slug}`}
-              className="group flex items-center gap-4 border border-hairline bg-surface p-6 transition-colors hover:border-gold"
-            >
-              <ArrowLeft className="h-5 w-5 text-gold transition-transform group-hover:-translate-x-1" />
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Previous Project</p>
-                <p className="mt-1 font-display text-lg font-semibold text-ivory">{prevProject.title}</p>
-              </div>
+            <Link to={`/projects/${prevProject.slug}`}>
+              <LiquidGlassCard className="group flex items-center gap-4 p-6">
+                <ArrowLeft className="h-5 w-5 text-gold transition-transform group-hover:-translate-x-1" />
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Previous Project</p>
+                  <p className="mt-1 font-display text-lg font-semibold text-ivory">{prevProject.title}</p>
+                </div>
+              </LiquidGlassCard>
             </Link>
           ) : (
             <div />
           )}
 
           {nextProject && (
-            <Link
-              to={`/projects/${nextProject.slug}`}
-              className="group flex items-center justify-end gap-4 border border-hairline bg-surface p-6 text-right transition-colors hover:border-gold"
-            >
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Next Project</p>
-                <p className="mt-1 font-display text-lg font-semibold text-ivory">{nextProject.title}</p>
-              </div>
-              <ArrowRight className="h-5 w-5 text-gold transition-transform group-hover:translate-x-1" />
+            <Link to={`/projects/${nextProject.slug}`}>
+              <LiquidGlassCard className="group flex items-center justify-end gap-4 p-6 text-right">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slateMuted">Next Project</p>
+                  <p className="mt-1 font-display text-lg font-semibold text-ivory">{nextProject.title}</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gold transition-transform group-hover:translate-x-1" />
+              </LiquidGlassCard>
             </Link>
           )}
         </div>

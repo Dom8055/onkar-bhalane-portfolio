@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Download, MailOpen, Mail, Search, Trash2 } from 'lucide-react';
+import { Download, Mail, MailOpen, Search, Trash2 } from 'lucide-react';
+import { LiquidGlassDropdown, LiquidGlassPanel } from '../components/liquid-glass';
 import { adminApi } from '../services/api';
 import type { ContactInquiry } from '../types/portfolio';
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'new', label: 'New' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'replied', label: 'Replied' },
+  { value: 'archived', label: 'Archived' },
+];
 
 export const InquiriesManager: React.FC = () => {
   const [messages, setMessages] = useState<ContactInquiry[]>([]);
@@ -42,61 +51,56 @@ export const InquiriesManager: React.FC = () => {
         </div>
         <button
           onClick={() => adminApi.exportMessagesCsv()}
-          className="inline-flex items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-semibold text-gold-light hover:bg-gold/20"
+          className="liquid-glass inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-2.5 text-xs font-semibold text-gold hover:bg-gold hover:text-[#080B12]"
         >
           <Download className="h-4 w-4" />
           Export CSV
         </button>
       </div>
 
-      {/* Filters */}
+      {/* Search + LiquidGlassDropdown Filter */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slateMuted" />
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slateMuted" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, email, subject..."
-            className="w-full rounded-xl border border-white/10 bg-surface py-2.5 pl-10 pr-4 text-sm text-ivory outline-none focus:border-gold"
+            className="liquid-glass w-full rounded-full py-2.5 pl-11 pr-4 text-sm text-ivory outline-none focus:border-gold"
           />
         </div>
-        {['all', 'new', 'in_progress', 'replied', 'archived'].map((st) => (
-          <button
-            key={st}
-            onClick={() => setStatusFilter(st)}
-            className={`rounded-xl px-3.5 py-2 text-xs uppercase ${
-              statusFilter === st ? 'bg-gold font-semibold text-obsidian' : 'border border-white/10 text-slateMuted'
-            }`}
-          >
-            {st.replace('_', ' ')}
-          </button>
-        ))}
+        <LiquidGlassDropdown
+          label="Filter"
+          value={statusFilter}
+          options={STATUS_OPTIONS}
+          onChange={setStatusFilter}
+        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* List */}
         <div className="space-y-3 lg:col-span-5">
           {messages.length === 0 ? (
-            <div className="glass-panel rounded-2xl p-8 text-center text-sm text-slateMuted">No inquiries found.</div>
+            <LiquidGlassPanel className="p-8 text-center text-sm text-slateMuted">No inquiries found.</LiquidGlassPanel>
           ) : (
             messages.map((m) => (
               <button
                 key={m.id}
                 onClick={() => openMessage(m)}
-                className={`glass-panel w-full rounded-2xl p-4 text-left transition-colors ${
-                  selected?.id === m.id ? 'border-gold' : 'hover:border-white/20'
+                className={`liquid-glass w-full rounded-2xl p-4 text-left transition-all ${
+                  selected?.id === m.id ? 'border-gold' : 'hover:border-gold/40'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="flex items-center gap-2 text-sm font-semibold text-ivory">
-                    {m.is_read ? <MailOpen className="h-3.5 w-3.5 text-slateMuted" /> : <Mail className="h-3.5 w-3.5 text-gold-light" />}
+                    {m.is_read ? <MailOpen className="h-3.5 w-3.5 text-slateMuted" /> : <Mail className="h-3.5 w-3.5 text-gold" />}
                     {m.name}
                   </span>
-                  <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] uppercase text-gold-light">
+                  <span className="rounded-full border border-hairline px-2.5 py-0.5 font-mono text-[10px] uppercase text-gold">
                     {m.status}
                   </span>
                 </div>
-                <p className="mt-1 truncate text-xs text-gold-light">{m.subject}</p>
+                <p className="mt-1 truncate text-xs font-medium text-gold">{m.subject}</p>
                 <p className="mt-1 line-clamp-2 text-xs text-slateMuted">{m.message}</p>
               </button>
             ))
@@ -106,8 +110,8 @@ export const InquiriesManager: React.FC = () => {
         {/* Detail Pane */}
         <div className="lg:col-span-7">
           {selected ? (
-            <div className="glass-panel rounded-2xl p-6 space-y-5">
-              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+            <LiquidGlassPanel className="space-y-5 p-6">
+              <div className="flex items-start justify-between gap-4 border-b border-hairline pb-4">
                 <div>
                   <h2 className="font-display text-xl font-bold text-ivory">{selected.subject}</h2>
                   <p className="mt-1 text-xs text-slateMuted">
@@ -123,34 +127,32 @@ export const InquiriesManager: React.FC = () => {
                       await load();
                     }
                   }}
-                  className="rounded-lg border border-rose-500/20 p-2 text-rose-400"
+                  className="rounded-full border border-rose-500/30 p-2 text-rose-500 hover:bg-rose-500/10"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
 
-              <div className="rounded-xl bg-obsidian/80 p-4 text-sm leading-relaxed text-ivory whitespace-pre-wrap">
+              <div className="whitespace-pre-wrap rounded-2xl border border-hairline bg-surface p-4 text-sm leading-relaxed text-ivory">
                 {selected.message}
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="text-xs uppercase text-slateMuted">Status</label>
-                  <select
-                    value={selected.status}
-                    onChange={(e) => updateSelected({ status: e.target.value as ContactInquiry['status'] })}
-                    className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2 text-sm text-ivory"
-                  >
-                    <option value="new">New</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="replied">Replied</option>
-                    <option value="archived">Archived</option>
-                  </select>
+                  <label className="font-mono text-[10px] uppercase tracking-wider text-slateMuted">Status</label>
+                  <div className="mt-1.5">
+                    <LiquidGlassDropdown
+                      value={selected.status}
+                      options={STATUS_OPTIONS.filter((o) => o.value !== 'all')}
+                      onChange={(val) => updateSelected({ status: val as ContactInquiry['status'] })}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
                 <div className="flex items-end">
                   <button
                     onClick={() => updateSelected({ is_read: !selected.is_read })}
-                    className="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-2 text-xs text-ivory hover:border-gold"
+                    className="liquid-glass w-full rounded-full px-4 py-2.5 text-xs font-medium text-ivory hover:border-gold"
                   >
                     Mark as {selected.is_read ? 'Unread' : 'Read'}
                   </button>
@@ -158,25 +160,25 @@ export const InquiriesManager: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs uppercase text-slateMuted">Internal Notes</label>
+                <label className="font-mono text-[10px] uppercase tracking-wider text-slateMuted">Internal Notes</label>
                 <textarea
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1.5 w-full rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm text-ivory outline-none focus:border-gold"
                 />
                 <button
                   onClick={() => updateSelected({ internal_notes: notes })}
-                  className="mt-2 rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian"
+                  className="mt-3 rounded-full bg-gradient-to-r from-gold to-gold-light px-5 py-2 text-xs font-semibold text-[#080B12]"
                 >
                   Save Notes
                 </button>
               </div>
-            </div>
+            </LiquidGlassPanel>
           ) : (
-            <div className="glass-panel flex h-64 items-center justify-center rounded-2xl text-sm text-slateMuted">
+            <LiquidGlassPanel className="flex h-64 items-center justify-center text-sm text-slateMuted">
               Select an inquiry to view details and internal notes.
-            </div>
+            </LiquidGlassPanel>
           )}
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowUpRight, CheckCircle2, Github, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { MagneticButton } from '../components/MagneticButton';
+import { SectionBackdrop } from '../components/SectionBackdrop';
 import { portfolioApi } from '../services/api';
 import type { Profile } from '../types/portfolio';
 
@@ -43,8 +44,9 @@ export const ContactSection: React.FC<{ profile: Profile }> = ({ profile }) => {
   const contactPortrait = profile.contact_image || '/assets/portraits/portrait_editorial_thoughtful_black_blazer.webp';
 
   return (
-    <section id="contact" className="relative border-b border-hairline bg-obsidian py-24 sm:py-32">
-      <div className="mx-auto max-w-[1380px] px-5 sm:px-10">
+    <section id="contact" className="relative overflow-hidden border-b border-hairline bg-obsidian py-24 sm:py-32">
+      <SectionBackdrop variant="prismatic" />
+      <div className="relative z-10 mx-auto max-w-[1380px] px-5 sm:px-10">
         <div className="border-b border-hairline pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">06 / Initiate Conversation</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ivory sm:text-5xl">

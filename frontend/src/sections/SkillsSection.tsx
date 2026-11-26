@@ -33,6 +33,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { LiquidGlassNavigation } from '../components/liquid-glass';
+import { SectionBackdrop } from '../components/SectionBackdrop';
 import type { Skill } from '../types/portfolio';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -93,8 +94,9 @@ export const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
   }, [skills, selectedCategory]);
 
   return (
-    <section id="skills" className="relative border-b border-hairline bg-midnight py-24 sm:py-32">
-      <div className="mx-auto max-w-[1380px] px-5 sm:px-10">
+    <section id="skills" className="relative overflow-hidden border-b border-hairline bg-midnight py-24 sm:py-32">
+      <SectionBackdrop variant="constellation" />
+      <div className="relative z-10 mx-auto max-w-[1380px] px-5 sm:px-10">
         <div className="flex flex-col justify-between gap-6 border-b border-hairline pb-8 lg:flex-row lg:items-end">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">02 / Technical Stack</p>
@@ -141,7 +143,7 @@ export const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
                   return (
                     <div
                       key={skill.id}
-                      className="group flex flex-col gap-1.5 border border-hairline bg-surface px-3.5 py-2 transition-colors hover:border-gold"
+                      className="liquid-glass liquid-streak group relative flex flex-col gap-1.5 overflow-hidden rounded-full px-4 py-2 transition-all hover:-translate-y-0.5 hover:border-gold/60"
                     >
                       <div className="flex items-center gap-2">
                         {skill.icon_url ? (

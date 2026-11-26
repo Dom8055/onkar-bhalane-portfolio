@@ -86,7 +86,7 @@ export const ProfileManager: React.FC = () => {
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-sm font-semibold text-obsidian"
+          className="inline-flex items-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-sm font-semibold text-[#080B12]"
         >
           <Save className="h-4 w-4" />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -94,7 +94,7 @@ export const ProfileManager: React.FC = () => {
       </div>
 
       {message && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-300">
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-600 dark:text-emerald-300">
           <CheckCircle2 className="h-4 w-4" />
           {message}
         </div>
@@ -126,14 +126,14 @@ export const ProfileManager: React.FC = () => {
                   <img
                     src={currentUrl}
                     alt={slot.label}
-                    className="h-16 w-16 shrink-0 rounded-xl border border-white/10 object-cover object-top"
+                    className="h-16 w-16 shrink-0 rounded-xl border border-hairline object-cover object-top"
                   />
                 ) : (
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-gold/30 bg-obsidian font-display text-xs font-bold text-gold-light">
                     IMG
                   </div>
                 )}
-                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/15 bg-obsidian px-3 py-2 text-xs font-medium text-ivory hover:border-gold">
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-obsidian px-3 py-2 text-xs font-medium text-ivory hover:border-gold">
                   <Upload className="h-3.5 w-3.5 text-gold-light" />
                   Replace
                   <input
@@ -181,7 +181,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.name}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div>
@@ -189,7 +189,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.title}
             onChange={(e) => setProfile({ ...profile, title: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div className="sm:col-span-2">
@@ -197,7 +197,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.tagline}
             onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div className="sm:col-span-2">
@@ -214,7 +214,7 @@ export const ProfileManager: React.FC = () => {
                   .filter(Boolean),
               })
             }
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div>
@@ -222,7 +222,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.email}
             onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div>
@@ -230,7 +230,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.phone}
             onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div>
@@ -238,7 +238,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.location}
             onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div>
@@ -246,7 +246,7 @@ export const ProfileManager: React.FC = () => {
           <input
             value={profile.availability_status}
             onChange={(e) => setProfile({ ...profile, availability_status: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+            className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
           />
         </div>
         <div className="flex items-center gap-3 sm:col-span-2">
@@ -278,7 +278,7 @@ export const ProfileManager: React.FC = () => {
                 })
               }
               placeholder={`https://...`}
-              className="mt-1.5 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+              className="mt-1.5 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
             />
           </div>
         ))}

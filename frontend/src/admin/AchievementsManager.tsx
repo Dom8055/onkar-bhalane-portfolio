@@ -33,7 +33,7 @@ export const AchievementsManager: React.FC = () => {
         </div>
         <button
           onClick={() => setEditing({ badge: '10+', title: '', description: '', is_published: true, order: items.length + 1 })}
-          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-obsidian"
+          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-[#080B12]"
         >
           <Plus className="h-4 w-4" />
           Add Achievement
@@ -53,7 +53,7 @@ export const AchievementsManager: React.FC = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setEditing(a)} className="rounded-lg border border-white/10 p-2 text-slateMuted hover:text-ivory">
+              <button onClick={() => setEditing(a)} className="rounded-lg border border-hairline p-2 text-slateMuted hover:text-ivory">
                 <Pencil className="h-4 w-4" />
               </button>
               <button
@@ -84,24 +84,24 @@ export const AchievementsManager: React.FC = () => {
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="text-xs uppercase text-slateMuted">Badge *</label>
-                <input required value={editing.badge || ''} onChange={(e) => setEditing({ ...editing, badge: e.target.value })} placeholder="10+" className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
+                <input required value={editing.badge || ''} onChange={(e) => setEditing({ ...editing, badge: e.target.value })} placeholder="10+" className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
               </div>
               <div className="col-span-2">
                 <label className="text-xs uppercase text-slateMuted">Title *</label>
-                <input required value={editing.title || ''} onChange={(e) => setEditing({ ...editing, title: e.target.value })} className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
+                <input required value={editing.title || ''} onChange={(e) => setEditing({ ...editing, title: e.target.value })} className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
               </div>
             </div>
             <div>
               <label className="text-xs uppercase text-slateMuted">Description *</label>
-              <textarea required rows={3} value={editing.description || ''} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
+              <textarea required rows={3} value={editing.description || ''} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory" />
             </div>
             <label className="flex items-center gap-2 text-sm text-ivory">
               <input type="checkbox" checked={Boolean(editing.is_published)} onChange={(e) => setEditing({ ...editing, is_published: e.target.checked })} className="h-4 w-4 accent-[#B68B50]" />
               Published
             </label>
             <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setEditing(null)} className="rounded-xl border border-white/10 px-4 py-2 text-xs text-slateMuted">Cancel</button>
-              <button type="submit" className="rounded-xl bg-gold px-5 py-2 text-xs font-semibold text-obsidian">Save</button>
+              <button type="button" onClick={() => setEditing(null)} className="rounded-xl border border-hairline px-4 py-2 text-xs text-slateMuted">Cancel</button>
+              <button type="submit" className="rounded-xl bg-gold px-5 py-2 text-xs font-semibold text-[#080B12]">Save</button>
             </div>
           </form>
         </div>

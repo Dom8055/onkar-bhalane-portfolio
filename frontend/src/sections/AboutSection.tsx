@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { SectionBackdrop } from '../components/SectionBackdrop';
 import type { Profile } from '../types/portfolio';
 
 function AnimatedCounter({ value }: { value: string }) {
@@ -45,8 +46,9 @@ export const AboutSection: React.FC<{ profile: Profile }> = ({ profile }) => {
   const [activePortrait, setActivePortrait] = useState(0);
 
   return (
-    <section id="about" className="relative border-b border-hairline bg-obsidian py-24 sm:py-32">
-      <div className="mx-auto max-w-[1380px] px-5 sm:px-10">
+    <section id="about" className="relative overflow-hidden border-b border-hairline bg-obsidian py-24 sm:py-32">
+      <SectionBackdrop variant="slate" />
+      <div className="relative z-10 mx-auto max-w-[1380px] px-5 sm:px-10">
         {/* Section Eyebrow */}
         <div className="flex items-end justify-between border-b border-hairline pb-6">
           <div>

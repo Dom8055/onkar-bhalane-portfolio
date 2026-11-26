@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 import { CustomCursor } from '../CustomCursor';
 
 export type GlassTint = 'neutral' | 'gold' | 'blue' | 'emerald';
@@ -204,7 +204,7 @@ export const LiquidGlassNavigation: React.FC<{
   onChange: (value: string) => void;
   layoutId?: string;
 }> = ({ items, active, onChange, layoutId = 'lg-segment' }) => (
-  <div className="liquid-glass inline-flex flex-wrap items-center gap-1 rounded-full p-1.5">
+  <div className="liquid-glass no-scrollbar inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full p-1.5">
     {items.map((item) => {
       const isActive = active === item;
       return (
@@ -212,7 +212,7 @@ export const LiquidGlassNavigation: React.FC<{
           key={item}
           type="button"
           onClick={() => onChange(item)}
-          className={`relative rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+          className={`relative shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
             isActive ? 'text-[#080B12]' : 'text-slateMuted hover:text-ivory'
           }`}
         >
@@ -345,6 +345,98 @@ export const LiquidGlassModal: React.FC<{
 );
 
 /* ============================================================================
- * 10. LiquidGlassCursor — Refractive desktop lens cursor
+ * 10. LiquidGlassDropdown — Refractive glass dropdown menu
+ * ============================================================================ */
+export interface DropdownOption {
+  value: string;
+  label: string;
+}
+
+export const LiquidGlassDropdown: React.FC<{
+  value: string;
+  options: DropdownOption[];
+  onChange: (value: string) => void;
+  label?: string;
+  className?: string;
+}> = ({ value, options, onChange, label, className = '' }) => {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onOutside);
+    return () => document.removeEventListener('mousedown', onOutside);
+  }, []);
+
+  const current = options.find((o) => o.value === value) || options[0];
+
+  return (
+    <div ref={containerRef} className={`relative inline-block ${className}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="liquid-glass inline-flex w-full items-center justify-between gap-2.5 rounded-full px-4 py-2 text-xs font-medium text-ivory transition-colors hover:border-gold/60"
+      >
+        <span className="truncate">
+          {label ? <span className="mr-1.5 text-slateMuted">{label}:</span> : null}
+          {current?.label}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-gold transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.96 }}
+            transition={{ duration: 0.18 }}
+            className="liquid-glass-elevated absolute right-0 z-50 mt-2 min-w-[180px] overflow-hidden rounded-2xl p-1.5 shadow-card"
+          >
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2 text-left text-xs transition-colors ${
+                  opt.value === value
+                    ? 'bg-gold/20 font-semibold text-gold'
+                    : 'text-ivory hover:bg-surface'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+/* ============================================================================
+ * 11. LiquidGlassSvgFilters — Subtle optical lens refraction SVG filter defs
+ * ============================================================================ */
+export const LiquidGlassSvgFilters: React.FC = () => (
+  <svg className="pointer-events-none fixed h-0 w-0 overflow-hidden" aria-hidden="true">
+    <defs>
+      <filter id="liquid-refraction" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+);
+
+/* ============================================================================
+ * 12. LiquidGlassCursor — Refractive desktop lens cursor
  * ============================================================================ */
 export const LiquidGlassCursor = CustomCursor;

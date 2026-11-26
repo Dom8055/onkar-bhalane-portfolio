@@ -57,7 +57,7 @@ export const SkillsManager: React.FC = () => {
           onClick={() =>
             setEditing({ name: '', category: CATEGORIES[0], icon_name: 'code', is_visible: true, order: 1 })
           }
-          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-obsidian"
+          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-[#080B12]"
         >
           <Plus className="h-4 w-4" />
           Add Skill
@@ -70,7 +70,7 @@ export const SkillsManager: React.FC = () => {
             key={cat}
             onClick={() => setFilterCat(cat)}
             className={`rounded-full px-3.5 py-1.5 text-xs ${
-              filterCat === cat ? 'bg-gold text-obsidian font-semibold' : 'border border-white/10 text-slateMuted'
+              filterCat === cat ? 'bg-gold text-[#080B12] font-semibold' : 'border border-hairline text-slateMuted'
             }`}
           >
             {cat}
@@ -122,7 +122,7 @@ export const SkillsManager: React.FC = () => {
                 required
                 value={editing.name || ''}
                 onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
               />
             </div>
             <div>
@@ -130,7 +130,7 @@ export const SkillsManager: React.FC = () => {
               <select
                 value={editing.category || CATEGORIES[0]}
                 onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -146,7 +146,7 @@ export const SkillsManager: React.FC = () => {
                   type="number"
                   value={editing.order || 0}
                   onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -163,15 +163,15 @@ export const SkillsManager: React.FC = () => {
                     })
                   }
                   placeholder="Leave blank"
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setEditing(null)} className="rounded-xl border border-white/10 px-4 py-2 text-xs text-slateMuted">
+              <button type="button" onClick={() => setEditing(null)} className="rounded-xl border border-hairline px-4 py-2 text-xs text-slateMuted">
                 Cancel
               </button>
-              <button type="submit" className="rounded-xl bg-gold px-5 py-2 text-xs font-semibold text-obsidian">
+              <button type="submit" className="rounded-xl bg-gold px-5 py-2 text-xs font-semibold text-[#080B12]">
                 Save Skill
               </button>
             </div>

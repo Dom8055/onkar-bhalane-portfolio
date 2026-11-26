@@ -112,7 +112,7 @@ export const ProjectsManager: React.FC = () => {
         </div>
         <button
           onClick={() => openEditor()}
-          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-obsidian"
+          className="inline-flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-[#080B12]"
         >
           <Plus className="h-4 w-4" />
           Add Project
@@ -122,7 +122,7 @@ export const ProjectsManager: React.FC = () => {
       {/* Table */}
       <div className="glass-panel overflow-x-auto rounded-2xl">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-white/[0.07] text-xs uppercase text-slateMuted">
+          <thead className="border-b border-hairline text-xs uppercase text-slateMuted">
             <tr>
               <th className="px-5 py-3.5">Order</th>
               <th className="px-5 py-3.5">Project</th>
@@ -131,16 +131,16 @@ export const ProjectsManager: React.FC = () => {
               <th className="px-5 py-3.5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.06]">
+          <tbody className="divide-y divide-hairline">
             {projects.map((p) => (
-              <tr key={p.id} className="hover:bg-white/[0.02]">
+              <tr key={p.id} className="hover:bg-surface">
                 <td className="px-5 py-4 font-mono text-xs text-slateMuted">#{p.order}</td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     {p.cover_image ? (
                       <img src={p.cover_image} alt={p.title} className="h-10 w-14 rounded-lg object-cover" />
                     ) : (
-                      <div className="flex h-10 w-14 items-center justify-center rounded-lg border border-white/10 bg-obsidian font-mono text-[10px] text-slateMuted">
+                      <div className="flex h-10 w-14 items-center justify-center rounded-lg border border-hairline bg-obsidian font-mono text-[10px] text-slateMuted">
                         IMG
                       </div>
                     )}
@@ -156,7 +156,7 @@ export const ProjectsManager: React.FC = () => {
                     <button
                       onClick={() => toggleFlag(p, 'is_published')}
                       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ${
-                        p.is_published ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/10 text-slateMuted'
+                        p.is_published ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300' : 'bg-surface text-slateMuted'
                       }`}
                     >
                       {p.is_published ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
@@ -177,7 +177,7 @@ export const ProjectsManager: React.FC = () => {
                   <div className="inline-flex items-center gap-2">
                     <button
                       onClick={() => openEditor(p)}
-                      className="rounded-lg border border-white/10 p-2 text-slateMuted hover:border-gold/40 hover:text-ivory"
+                      className="rounded-lg border border-hairline p-2 text-slateMuted hover:border-gold/40 hover:text-ivory"
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </button>
@@ -202,7 +202,7 @@ export const ProjectsManager: React.FC = () => {
             onSubmit={handleSave}
             className="glass-panel-gold max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl p-6 sm:p-8"
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-hairline pb-4">
               <h2 className="font-display text-xl font-bold text-ivory">
                 {editing.id ? 'Edit Project' : 'New Project'}
               </h2>
@@ -218,7 +218,7 @@ export const ProjectsManager: React.FC = () => {
                   required
                   value={editing.title || ''}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -227,7 +227,7 @@ export const ProjectsManager: React.FC = () => {
                   required
                   value={editing.category || ''}
                   onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -235,7 +235,7 @@ export const ProjectsManager: React.FC = () => {
                 <input
                   value={editing.subtitle || ''}
                   onChange={(e) => setEditing({ ...editing, subtitle: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -244,7 +244,7 @@ export const ProjectsManager: React.FC = () => {
                   type="number"
                   value={editing.order || 0}
                   onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -254,7 +254,7 @@ export const ProjectsManager: React.FC = () => {
                   rows={2}
                   value={editing.short_description || ''}
                   onChange={(e) => setEditing({ ...editing, short_description: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -263,7 +263,7 @@ export const ProjectsManager: React.FC = () => {
                   rows={3}
                   value={editing.full_description || ''}
                   onChange={(e) => setEditing({ ...editing, full_description: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -272,7 +272,7 @@ export const ProjectsManager: React.FC = () => {
                   rows={3}
                   value={contribInput}
                   onChange={(e) => setContribInput(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -281,7 +281,7 @@ export const ProjectsManager: React.FC = () => {
                   value={techInput}
                   onChange={(e) => setTechInput(e.target.value)}
                   placeholder="Flutter, Dart, GetX, REST API"
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -289,7 +289,7 @@ export const ProjectsManager: React.FC = () => {
                 <input
                   value={editing.google_play_url || ''}
                   onChange={(e) => setEditing({ ...editing, google_play_url: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -297,7 +297,7 @@ export const ProjectsManager: React.FC = () => {
                 <input
                   value={editing.app_store_url || ''}
                   onChange={(e) => setEditing({ ...editing, app_store_url: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -305,7 +305,7 @@ export const ProjectsManager: React.FC = () => {
                 <input
                   value={editing.github_url || ''}
                   onChange={(e) => setEditing({ ...editing, github_url: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
               <div>
@@ -313,7 +313,7 @@ export const ProjectsManager: React.FC = () => {
                 <input
                   value={editing.live_url || ''}
                   onChange={(e) => setEditing({ ...editing, live_url: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
+                  className="mt-1 w-full rounded-xl border border-hairline bg-obsidian px-3.5 py-2.5 text-sm text-ivory"
                 />
               </div>
 
@@ -331,7 +331,7 @@ export const ProjectsManager: React.FC = () => {
                       onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], 'cover')}
                     />
                   </label>
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/15 bg-obsidian px-4 py-2 text-xs font-medium text-ivory">
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-hairline bg-obsidian px-4 py-2 text-xs font-medium text-ivory">
                     <Upload className="h-3.5 w-3.5" />
                     Add Gallery Screenshot
                     <input
@@ -343,20 +343,20 @@ export const ProjectsManager: React.FC = () => {
                   </label>
                 </div>
                 {editing.cover_image && (
-                  <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/10 bg-obsidian/70 p-2.5">
+                  <div className="mt-3 flex items-center gap-3 rounded-xl border border-hairline bg-surface p-2.5">
                     <img
                       src={editing.cover_image}
                       alt="Cover preview"
                       className="h-14 w-24 rounded-lg object-cover"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-emerald-300">Cover Thumbnail Active</p>
+                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-300">Cover Thumbnail Active</p>
                       <p className="truncate text-[11px] text-slateMuted">{editing.cover_image}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setEditing({ ...editing, cover_image: '' })}
-                      className="rounded-lg border border-rose-500/25 px-2.5 py-1 text-[11px] text-rose-300 hover:bg-rose-500/10"
+                      className="rounded-lg border border-rose-500/25 px-2.5 py-1 text-[11px] text-rose-600 dark:text-rose-300 hover:bg-rose-500/10"
                     >
                       Remove
                     </button>
@@ -365,7 +365,7 @@ export const ProjectsManager: React.FC = () => {
                 {(editing.gallery_images?.length || 0) > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {editing.gallery_images!.map((url, idx) => (
-                      <div key={url + idx} className="group relative h-16 w-24 overflow-hidden rounded-lg border border-white/10">
+                      <div key={url + idx} className="group relative h-16 w-24 overflow-hidden rounded-lg border border-hairline">
                         <img src={url} alt={`Gallery ${idx + 1}`} className="h-full w-full object-cover" />
                         <button
                           type="button"
@@ -375,7 +375,7 @@ export const ProjectsManager: React.FC = () => {
                               gallery_images: editing.gallery_images!.filter((_, i) => i !== idx),
                             })
                           }
-                          className="absolute right-1 top-1 rounded-full bg-black/75 p-0.5 text-rose-300 opacity-0 transition-opacity group-hover:opacity-100"
+                          className="absolute right-1 top-1 rounded-full bg-black/75 p-0.5 text-rose-600 dark:text-rose-300 opacity-0 transition-opacity group-hover:opacity-100"
                           title="Remove screenshot"
                         >
                           <X className="h-3 w-3" />
@@ -408,18 +408,18 @@ export const ProjectsManager: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3 border-t border-white/10 pt-4">
+            <div className="mt-6 flex justify-end gap-3 border-t border-hairline pt-4">
               <button
                 type="button"
                 onClick={() => setEditing(null)}
-                className="rounded-xl border border-white/10 px-5 py-2.5 text-sm text-slateMuted"
+                className="rounded-xl border border-hairline px-5 py-2.5 text-sm text-slateMuted"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-xl bg-gold px-6 py-2.5 text-sm font-semibold text-obsidian"
+                className="rounded-xl bg-gold px-6 py-2.5 text-sm font-semibold text-[#080B12]"
               >
                 {saving ? 'Saving...' : 'Save Project'}
               </button>

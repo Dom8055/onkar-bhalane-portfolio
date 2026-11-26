@@ -22,7 +22,7 @@ export const ActivityLogsPage: React.FC = () => {
 
       <div className="glass-panel overflow-x-auto rounded-2xl">
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-white/10 uppercase text-slateMuted">
+          <thead className="border-b border-hairline uppercase text-slateMuted">
             <tr>
               <th className="px-5 py-3.5">Timestamp</th>
               <th className="px-5 py-3.5">Admin</th>
@@ -31,9 +31,9 @@ export const ActivityLogsPage: React.FC = () => {
               <th className="px-5 py-3.5">Details</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.06]">
+          <tbody className="divide-y divide-hairline">
             {logs.map((log) => (
-              <tr key={log.id} className="hover:bg-white/[0.02]">
+              <tr key={log.id} className="hover:bg-surface">
                 <td className="px-5 py-3.5 font-mono text-slateMuted">
                   {new Date(log.created_at).toLocaleString()}
                 </td>

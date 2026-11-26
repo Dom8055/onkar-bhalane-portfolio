@@ -124,8 +124,8 @@ export const AdminLayout: React.FC = () => {
           })}
         </nav>
 
-        <div className="border-t border-white/[0.08] p-4">
-          <div className="mb-3 rounded-xl bg-obsidian/70 px-3 py-2.5">
+        <div className="border-t border-hairline p-4">
+          <div className="mb-3 rounded-xl bg-surface px-3 py-2.5">
             <p className="truncate text-xs font-semibold text-ivory">{admin.name}</p>
             <p className="truncate text-[11px] text-slateMuted">{admin.email}</p>
           </div>
@@ -133,14 +133,14 @@ export const AdminLayout: React.FC = () => {
             <Link
               to="/"
               target="_blank"
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/10 py-2 text-xs text-slateMuted hover:border-gold/40 hover:text-ivory"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-hairline py-2 text-xs text-slateMuted hover:border-gold/40 hover:text-ivory"
             >
               <ExternalLink className="h-3.5 w-3.5" />
               Live Site
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-300 hover:bg-rose-500/20"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-600 dark:text-rose-300 hover:bg-rose-500/20"
             >
               <LogOut className="h-3.5 w-3.5" />
               Logout
@@ -151,10 +151,10 @@ export const AdminLayout: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/[0.07] bg-obsidian/85 px-5 py-3.5 backdrop-blur-xl lg:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-hairline bg-obsidian/85 px-5 py-3.5 backdrop-blur-xl lg:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-surface text-ivory"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-hairline bg-surface text-ivory"
           >
             <Menu className="h-5 w-5" />
           </button>
