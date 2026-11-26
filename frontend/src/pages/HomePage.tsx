@@ -127,7 +127,7 @@ export const HomePage: React.FC = () => {
   const keysToRender =
     sectionOrder.length > 0
       ? sectionOrder.map((s) => s.key)
-      : ['hero', 'about', 'skills', 'experience', 'projects', 'achievements', 'education', 'contact'];
+      : ['hero', 'about', 'skills', 'experience', 'projects', 'achievements', 'contact'];
 
   return (
     <div className="min-h-screen bg-obsidian text-ivory transition-colors duration-300">

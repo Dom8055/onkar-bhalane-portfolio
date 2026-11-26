@@ -730,7 +730,7 @@ async def seed_database(db: Any) -> None:
                     {"key": "experience", "label": "Professional Experience", "is_visible": True, "order": 4},
                     {"key": "projects", "label": "Featured Projects", "is_visible": True, "order": 5},
                     {"key": "achievements", "label": "Achievements", "is_visible": True, "order": 6},
-                    {"key": "education", "label": "Education", "is_visible": True, "order": 7},
+                    {"key": "education", "label": "Education", "is_visible": False, "order": 7},
                     {"key": "contact", "label": "Contact", "is_visible": True, "order": 8},
                 ],
                 "created_at": ts,
@@ -795,8 +795,35 @@ async def seed_database(db: Any) -> None:
                 await db.projects.update_one({"_id": proj_doc["_id"]}, {"$set": patch})
 
     settings_doc = await db.website_settings.find_one({})
-    if settings_doc and not settings_doc.get("og_image"):
-        await db.website_settings.update_one(
-            {"_id": settings_doc["_id"]},
-            {"$set": {"og_image": "/assets/social-media/og_hero_banner.webp", "updated_at": ts}},
-        )
+    if settings_doc:
+        settings_patch = {}
+        if not settings_doc.get("og_image"):
+            settings_patch["og_image"] = "/assets/social-media/og_hero_banner.webp"
+        # Ensure Education section is hidden on public portfolio as requested
+        sections = settings_doc.get("sections") or []
+        if sections and any(s.get("key") == "education" and s.get("is_visible") for s in sections):
+            settings_patch["sections"] = [
+                {**s, "is_visible": False} if s.get("key") == "education" else s for s in sections
+            ]
+        if settings_patch:
+            settings_patch["updated_at"] = ts
+            await db.website_settings.update_one({"_id": settings_doc["_id"]}, {"$set": settings_patch})
+
+    # 10. Deduplicate collections in case concurrent serverless cold starts seeded twice
+    async def dedupe_collection(col: Any, key_fields: tuple) -> None:
+        seen = set()
+        duplicate_ids = []
+        docs = await col.find({}).sort("created_at", 1).to_list(length=500)
+        for doc in docs:
+            sig = tuple(str(doc.get(k, "")).strip().lower() for k in key_fields)
+            if sig in seen:
+                duplicate_ids.append(doc["_id"])
+            else:
+                seen.add(sig)
+        if duplicate_ids:
+            await col.delete_many({"_id": {"$in": duplicate_ids}})
+
+    await dedupe_collection(db.experiences, ("company", "role", "duration"))
+    await dedupe_collection(db.education, ("degree", "institution"))
+    await dedupe_collection(db.achievements, ("title",))
+    await dedupe_collection(db.skills, ("name", "category"))

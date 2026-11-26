@@ -46,7 +46,7 @@ export const ContactSection: React.FC<{ profile: Profile }> = ({ profile }) => {
     <section id="contact" className="relative border-b border-hairline bg-obsidian py-24 sm:py-32">
       <div className="mx-auto max-w-[1380px] px-5 sm:px-10">
         <div className="border-b border-hairline pb-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">07 / Initiate Conversation</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-gold">06 / Initiate Conversation</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ivory sm:text-5xl">
             Let&apos;s build something <span className="text-gradient-gold">enduring.</span>
           </h2>
